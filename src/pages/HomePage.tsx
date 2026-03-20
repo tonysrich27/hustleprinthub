@@ -18,6 +18,22 @@ import { decalsStorefrontData } from '../data/storefront/decalsData';
 export function HomePage() {
   return (
     <>
+      {/* Deployment verification - quick links to updated pages */}
+      <div className="bg-gold/10 border-b border-gold/30 px-4 py-2">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-4 text-sm">
+          <span className="font-semibold text-gold">Updated pages:</span>
+          <Link to="/order/vehicle-wraps" className="text-white underline hover:text-gold">
+            Vehicle Wraps
+          </Link>
+          <Link to="/order/decals" className="text-white underline hover:text-gold">
+            Decals
+          </Link>
+          <Link to="/order/t-shirts" className="text-white underline hover:text-gold">
+            Apparel
+          </Link>
+        </div>
+      </div>
+
       {/* Hero - Dramatic, cinematic */}
       <section className="relative min-h-[85vh] overflow-hidden px-4 py-24 md:py-32 texture-overlay">
         {/* Layered backgrounds */}
