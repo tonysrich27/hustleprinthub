@@ -13,3 +13,84 @@
     font-family: 'DM Sans', system-ui, sans-serif;
   }
 }
+
+@layer utilities {
+  .text-shadow-gold {
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+  }
+  .animate-on-scroll {
+    opacity: 0;
+  }
+}
+
+/* Section divider - gold accent line with gradient fade */
+.section-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.3) 20%,
+    rgba(212, 175, 55, 0.8) 50%,
+    rgba(212, 175, 55, 0.3) 80%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+.section-divider-thick {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.4) 30%,
+    rgba(212, 175, 55, 1) 50%,
+    rgba(212, 175, 55, 0.4) 70%,
+    transparent 100%
+  );
+  margin: 3rem 0;
+}
+
+/* Texture overlay - subtle noise */
+.texture-overlay {
+  position: relative;
+}
+.texture-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Premium card hover - gold border glow */
+.card-hover-gold {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover-gold:hover {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.25), 0 0 60px rgba(212, 175, 55, 0.1);
+  transform: translateY(-2px);
+}
+
+/* CTA button premium hover */
+.cta-premium {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cta-premium:hover {
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+  transform: scale(1.01);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-hover-gold:hover,
+  .cta-premium:hover {
+    transform: none;
+  }
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-fade-in-delay-1,
+  .animate-fade-in-delay-2,
+  .animate-fade-in-delay-3 {
+    animation: none;
+    opacity: 1;
+  }
+}

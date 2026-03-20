@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Product } from '../../data/products';
+import { getOrderUrl } from '../../data/productRoutes';
 
 interface ProductCardProps {
   product: Product;
@@ -7,21 +8,17 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="group flex flex-col rounded-xl border-2 border-charcoal-50/30 bg-charcoal-100/50 p-6 transition hover:border-gold/50 hover:bg-charcoal-50/30 md:p-8">
-      <span className="mb-4 text-4xl">{product.icon}</span>
+    <div className="card-hover-gold group flex flex-col rounded-xl border border-charcoal-50/40 bg-charcoal-100/50 p-6 md:p-8">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-charcoal-50/30 text-4xl ring-1 ring-charcoal-50/20 transition group-hover:bg-gold/10 group-hover:ring-gold/30">
+        {product.icon}
+      </div>
       <h3 className="font-heading text-2xl font-bold tracking-wide text-white">
         {product.name}
       </h3>
       <p className="mt-2 text-gray-400">{product.description}</p>
       <Link
-        to={
-          product.slug === 'banners'
-            ? '/order/banners'
-            : product.slug === 'yard-signs'
-              ? '/order/yard-signs'
-              : `/order?product=${product.slug}`
-        }
-        className="mt-6 inline-flex w-fit rounded-md bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition hover:bg-gold-300"
+        to={getOrderUrl(product.slug)}
+        className="cta-premium mt-6 inline-flex w-fit rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-charcoal hover:bg-gold-300"
       >
         Start Order
       </Link>

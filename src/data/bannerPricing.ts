@@ -1,11 +1,11 @@
 /**
- * Banner pricing configuration — reusable for future products (yard signs, decals, etc.)
+ * Banner pricing configuration
  */
 export const bannerPricing = {
   sizes: {
-    '3x6': { base: 90, double: 70 },
-    '4x8': { base: 120, double: 100 },
-    '6x10': { base: 220, double: 150 },
+    '3x6': { base: 90, doubleTotal: 160 },
+    '3x8': { base: 120, doubleTotal: 175 },
+    '6x10': { base: 220, doubleTotal: 320 },
   },
   addons: {
     windSlits: 15,

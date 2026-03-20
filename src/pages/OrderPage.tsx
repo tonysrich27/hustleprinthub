@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { OrderWizard } from '../features/order/OrderWizard';
+import { PRODUCT_ORDER_ROUTES } from '../data/productRoutes';
 
 export function OrderPage() {
   const navigate = useNavigate();
@@ -8,14 +9,11 @@ export function OrderPage() {
   const product = searchParams.get('product');
 
   useEffect(() => {
-    if (product === 'banners') {
-      navigate('/order/banners', { replace: true });
-    } else if (product === 'yard-signs') {
-      navigate('/order/yard-signs', { replace: true });
-    }
+    const redirect = product ? PRODUCT_ORDER_ROUTES[product] : null;
+    if (redirect) navigate(redirect, { replace: true });
   }, [product, navigate]);
 
-  if (product === 'banners' || product === 'yard-signs') return null;
+  if (product && PRODUCT_ORDER_ROUTES[product]) return null;
 
   return (
     <div className="min-h-screen">

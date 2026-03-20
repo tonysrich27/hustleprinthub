@@ -1,0 +1,41 @@
+export const bannerStorefrontData = {
+  id: 'banners',
+  name: 'Banners',
+  slug: 'banners',
+  description: 'Vinyl banners for events, promotions, and signage',
+  tagline: 'High-Quality Outdoor Banners — Starting at $90',
+  subcopy: 'Fast Turnaround Available',
+  options: [
+    {
+      id: '3x6',
+      label: '3×6 ft',
+      price: 90,
+      doublePrice: 160,
+      badge: 'Starter' as const,
+      bestFor: 'Great for fences, vendor booths, and small events.',
+    },
+    {
+      id: '3x8',
+      label: '3×8 ft',
+      price: 120,
+      doublePrice: 175,
+      badge: 'Most Popular' as const,
+      bestFor: 'Best for storefronts and medium promotions.',
+    },
+    {
+      id: '6x10',
+      label: '6×10 ft',
+      price: 220,
+      doublePrice: 320,
+      badge: 'High Visibility' as const,
+      bestFor: 'Perfect for large events and high visibility.',
+    },
+  ],
+  addons: [
+    { id: 'windSlits', label: 'Wind slits', price: 15 },
+    { id: 'polePockets', label: 'Pole pockets', price: 20 },
+    { id: 'rope', label: 'Rope', price: 15 },
+    { id: 'rush', label: 'Rush', price: 50 },
+    { id: 'design', label: 'Design help', price: 25 },
+  ],
+};

@@ -4,6 +4,10 @@ import { HomePage } from './pages/HomePage';
 import { OrderPage } from './pages/OrderPage';
 import { BannerOrderPage } from './pages/BannerOrderPage';
 import { YardSignOrderPage } from './pages/YardSignOrderPage';
+import { FlyerOrderPage } from './pages/FlyerOrderPage';
+import { TShirtOrderPage } from './pages/TShirtOrderPage';
+import { CarMagnetOrderPage } from './pages/CarMagnetOrderPage';
+import { DecalsOrderPage } from './pages/DecalsOrderPage';
 import { WebsiteOrderPage } from './pages/WebsiteOrderPage';
 import { SponsorPage } from './pages/SponsorPage';
 import { ThankYouPage } from './pages/ThankYouPage';
@@ -17,6 +21,10 @@ function App() {
           <Route path="order" element={<OrderPage />} />
           <Route path="order/banners" element={<BannerOrderPage />} />
           <Route path="order/yard-signs" element={<YardSignOrderPage />} />
+          <Route path="order/flyers" element={<FlyerOrderPage />} />
+          <Route path="order/t-shirts" element={<TShirtOrderPage />} />
+          <Route path="order/car-magnets" element={<CarMagnetOrderPage />} />
+          <Route path="order/decals" element={<DecalsOrderPage />} />
           <Route path="order/website" element={<WebsiteOrderPage />} />
           <Route path="sponsor" element={<SponsorPage />} />
           <Route path="thank-you" element={<ThankYouPage />} />

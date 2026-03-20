@@ -34,8 +34,8 @@ export function BannerOrderBuilder() {
     if (!size || !(size in bannerPricing.sizes)) return 0;
 
     const sizeData = bannerPricing.sizes[size as BannerSizeKey];
-    let total = sizeData.base;
-    if (doubleSided) total += sizeData.double;
+    const baseTotal = doubleSided ? sizeData.doubleTotal : sizeData.base;
+    let total = baseTotal;
 
     if (windSlits) total += bannerPricing.addons.windSlits;
     if (polePockets) total += bannerPricing.addons.polePockets;
@@ -205,7 +205,7 @@ export function BannerOrderBuilder() {
                     <p className="mt-1 text-sm text-gray-400">Best for visibility from both directions</p>
                     {size && size !== 'custom' && (
                       <p className="mt-1 text-gold font-medium">
-                        +${bannerPricing.sizes[size as BannerSizeKey].double}
+                        ${bannerPricing.sizes[size as BannerSizeKey].doubleTotal} total
                       </p>
                     )}
                   </div>
