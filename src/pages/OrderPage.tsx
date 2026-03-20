@@ -1,6 +1,22 @@
+import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { OrderWizard } from '../features/order/OrderWizard';
 
 export function OrderPage() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const product = searchParams.get('product');
+
+  useEffect(() => {
+    if (product === 'banners') {
+      navigate('/order/banners', { replace: true });
+    } else if (product === 'yard-signs') {
+      navigate('/order/yard-signs', { replace: true });
+    }
+  }, [product, navigate]);
+
+  if (product === 'banners' || product === 'yard-signs') return null;
+
   return (
     <div className="min-h-screen">
       <div className="border-b border-charcoal-50/20 bg-charcoal-400/50 px-4 py-6">

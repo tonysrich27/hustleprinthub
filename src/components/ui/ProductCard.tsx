@@ -14,7 +14,13 @@ export function ProductCard({ product }: ProductCardProps) {
       </h3>
       <p className="mt-2 text-gray-400">{product.description}</p>
       <Link
-        to={`/order?product=${product.slug}`}
+        to={
+          product.slug === 'banners'
+            ? '/order/banners'
+            : product.slug === 'yard-signs'
+              ? '/order/yard-signs'
+              : `/order?product=${product.slug}`
+        }
         className="mt-6 inline-flex w-fit rounded-md bg-gold px-4 py-2 text-sm font-semibold text-charcoal transition hover:bg-gold-300"
       >
         Start Order
