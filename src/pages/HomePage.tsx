@@ -248,6 +248,25 @@ export function HomePage() {
         </div>
       </Section>
 
+      <SectionDivider />
+
+      {/* Vehicle Wraps */}
+      <Section
+        title="Vehicle Wraps"
+        subtitle="Full and partial wraps. Labor $7/sq ft + material. Get an instant estimate."
+      >
+        <div className="card-hover-gold rounded-xl border border-charcoal-50/40 bg-charcoal-100/50 p-6 backdrop-blur-sm">
+          <p className="font-heading text-xl font-bold tracking-wide text-white">Instant Price Calculator</p>
+          <p className="mt-1 text-gray-400">Sedan from ~$3,150 · Cargo van ~$4,550 · Food truck ~$5,600+</p>
+          <p className="mt-2 text-sm text-gold">Add-ons: Full color +$600, Decal kits available</p>
+          <div className="mt-4">
+            <CTAButton to="/order/vehicle-wraps" variant="primary">
+              Get Quote
+            </CTAButton>
+          </div>
+        </div>
+      </Section>
+
       {/* What We Print - Quick grid */}
       <Section title="What We Print" subtitle="Choose your product and get started">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
