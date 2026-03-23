@@ -80,6 +80,7 @@
   },
   "category": {
     "gallery": "Gallery",
+    "galleryImageAlt": "{{product}} — image {{num}}",
     "readyToOrder": "Ready to order?",
     "readyDesc": "Get started with your {{product}} — fast turnaround available.",
     "signs": {

@@ -41,7 +41,7 @@ export function HomePage() {
       <section className="relative min-h-[85vh] overflow-hidden px-4 py-24 md:py-32 texture-overlay">
         <div className="absolute inset-0 bg-charcoal" />
         <img
-          src="/images/banners/banner-outdoor.jpg"
+          src={PRODUCTS_WITH_IMAGES.find((p) => p.slug === 'banners')?.thumbnail ?? '/images/banners/banner-outdoor.jpg'}
           alt=""
           className="absolute inset-0 h-full w-full object-cover opacity-40"
           aria-hidden

@@ -55,7 +55,7 @@ export function CategoryPageLayout({ category }: CategoryPageLayoutProps) {
                 >
                   <img
                     src={src}
-                    alt={`${title} ${i + 2}`}
+                    alt={t('category.galleryImageAlt', { product: title, num: i + 2 })}
                     className="aspect-[4/3] w-full object-cover transition group-hover:scale-105"
                   />
                 </div>

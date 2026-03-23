@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StepIndicator } from '../../components/ui/StepIndicator';
 import { OrderSummaryCard } from '../../components/ui/OrderSummaryCard';
 import { CTAButton } from '../../components/ui/CTAButton';
 import { PRODUCTS } from '../../data/products';
+import { PRODUCT_ORDER_ROUTES } from '../../data/productRoutes';
 import { ORDER_STEPS, SOURCE_OPTIONS } from './ORDER_STEPS';
 import { ARTWORK_STATUS_OPTIONS, DESIGN_STATUS_OPTIONS } from './DESIGN_HELP';
 import { ArtworkStatusStep } from './ArtworkStatusStep';
@@ -44,9 +46,12 @@ export function OrderWizard() {
   const [source, setSource] = useState('');
   const [sponsorCode, setSponsorCode] = useState('');
 
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const totalSteps = ORDER_STEPS.length;
-  const productName = selectedProduct ? PRODUCTS.find((p) => p.slug === selectedProduct)?.name ?? '—' : '—';
+  const orderableProducts = PRODUCTS.filter((p) => PRODUCT_ORDER_ROUTES[p.orderSlug]);
+  const selectedProd = selectedProduct ? orderableProducts.find((p) => p.orderSlug === selectedProduct) : null;
+  const productName = selectedProd ? t(selectedProd.titleKey) : '—';
   const specs = { size, quantity };
 
   const needsVectorCleanup = artworkStatus === 'cleanup';
@@ -102,19 +107,23 @@ export function OrderWizard() {
                 <h2 className="font-heading text-2xl font-bold text-white">Product Type</h2>
                 <p className="mt-2 text-gray-400">Select the type of print you need.</p>
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                  {PRODUCTS.map((product) => (
+                  {orderableProducts.map((product) => (
                     <button
                       key={product.id}
                       type="button"
-                      onClick={() => setSelectedProduct(product.slug)}
+                      onClick={() => setSelectedProduct(product.orderSlug)}
                       className={`flex items-start gap-3 rounded-lg border p-4 text-left transition ${
-                        selectedProduct === product.slug ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
+                        selectedProduct === product.orderSlug ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
                       }`}
                     >
-                      <span className="text-2xl">{product.icon}</span>
+                      {product.thumbnail ? (
+                        <img src={product.thumbnail} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+                      ) : (
+                        <span className="text-2xl">{product.icon}</span>
+                      )}
                       <div>
-                        <h3 className="font-semibold text-white">{product.name}</h3>
-                        <p className="text-sm text-gray-400">{product.description}</p>
+                        <h3 className="font-semibold text-white">{t(product.titleKey)}</h3>
+                        <p className="text-sm text-gray-400">{t(product.descriptionKey)}</p>
                       </div>
                     </button>
                   ))}
