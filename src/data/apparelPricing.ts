@@ -3,10 +3,10 @@
  */
 export const apparelPricing = {
   garments: {
-    gildan5000: { base: 6, label: 'Gildan 5000', type: 'T-Shirt', image: '👕' },
-    gildan18500: { base: 18, label: 'Gildan 18500', type: 'Hoodie', image: '🧥' },
-    gildan5400: { base: 8, label: 'Gildan 5400', type: 'Long Sleeve', image: '👔' },
-    youth5000: { base: 5, label: 'Youth 5000', type: 'Youth T-Shirt', image: '👕' },
+    gildan5000: { base: 6, label: 'Gildan 5000', type: 'T-Shirt', image: '👕', imagePath: '/images/tshirt-gildan5000.jpg' },
+    gildan18500: { base: 18, label: 'Gildan 18500', type: 'Hoodie', image: '🧥', imagePath: '/images/hoodie-gildan18500.jpg' },
+    gildan5400: { base: 8, label: 'Gildan 5400', type: 'Long Sleeve', image: '👔', imagePath: '/images/longsleeve-gildan5400.jpg' },
+    youth5000: { base: 5, label: 'Youth 5000', type: 'Youth T-Shirt', image: '👕', imagePath: '/images/youth-5000.jpg' },
   },
   printPerSide: {
     front: 4,

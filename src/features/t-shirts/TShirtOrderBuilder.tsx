@@ -8,16 +8,41 @@ import { CustomerDetailsStep, type CustomerDetails } from '../../components/orde
 import { tShirtPricing } from '../../data/tShirtPricing';
 import { apparelPricing, type GarmentKey, type SizeKey } from '../../data/apparelPricing';
 
-const STEPS = ['Garment', 'Size', 'Quantity', 'Print', 'Add-ons', 'Upload', 'Details', 'Submit'];
-const QUICK_QTY = [15, 25, 50, 100];
+const STEPS = ['Build Order', 'Print', 'Add-ons', 'Upload', 'Details', 'Submit'];
 const SIZES: SizeKey[] = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'];
+
+export interface GarmentLine {
+  garment: GarmentKey;
+  sizeQtys: Record<SizeKey, number>;
+}
+
+function getLineTotal(sizeQtys: Record<SizeKey, number>): number {
+  return SIZES.reduce((sum, s) => sum + (sizeQtys[s] ?? 0), 0);
+}
+
+function getLineSubtotal(line: GarmentLine, printCost: number): number {
+  const total = getLineTotal(line.sizeQtys);
+  const garmentBase = apparelPricing.garments[line.garment].base;
+  let sum = 0;
+  SIZES.forEach((size) => {
+    const qty = line.sizeQtys[size] ?? 0;
+    if (qty > 0) {
+      const sizeAdd = apparelPricing.sizeUpcharge[size];
+      sum += (garmentBase + printCost + sizeAdd) * qty;
+    }
+  });
+  return sum;
+}
+
+const emptySizeQtys = (): Record<SizeKey, number> =>
+  SIZES.reduce((acc, s) => ({ ...acc, [s]: 0 }), {} as Record<SizeKey, number>);
 
 export function TShirtOrderBuilder() {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [garment, setGarment] = useState<GarmentKey | null>(null);
-  const [size, setSize] = useState<SizeKey>('M');
-  const [quantity, setQuantity] = useState(15);
+  const [lines, setLines] = useState<GarmentLine[]>([
+    { garment: 'gildan5000', sizeQtys: emptySizeQtys() },
+  ]);
   const [printSide, setPrintSide] = useState<'front' | 'back' | 'both'>('front');
   const [extraColor, setExtraColor] = useState(false);
   const [setup, setSetup] = useState(false);
@@ -28,39 +53,66 @@ export function TShirtOrderBuilder() {
   const [needsDesignHelp, setNeedsDesignHelp] = useState(false);
   const [customer, setCustomer] = useState<CustomerDetails>({ name: '', email: '', phone: '', notes: '' });
 
-  const doubleSided = printSide === 'both';
-  const garmentBase = garment ? apparelPricing.garments[garment].base : 0;
   const printCost = printSide === 'front' ? 4 : printSide === 'back' ? 4 : 7;
-  const sizeAdd = apparelPricing.sizeUpcharge[size];
-  const basePerShirt = garmentBase + printCost + sizeAdd;
-  const subtotal = basePerShirt * quantity;
+  let subtotal = 0;
+  lines.forEach((line) => {
+    subtotal += getLineSubtotal(line, printCost);
+  });
+  const totalQty = lines.reduce((sum, line) => sum + getLineTotal(line.sizeQtys), 0);
   let total = subtotal;
-  if (extraColor) total += tShirtPricing.addons.extraColor * quantity;
+  if (extraColor) total += tShirtPricing.addons.extraColor * totalQty;
   if (setup) total += tShirtPricing.addons.setup;
   if (designHelp) total += tShirtPricing.addons.design;
-  if (sleevePrint) total += tShirtPricing.addons.sleevePrint * quantity;
+  if (sleevePrint) total += tShirtPricing.addons.sleevePrint * totalQty;
   if (rush) total += subtotal * tShirtPricing.addons.rushPercent;
 
-  const summaryLines: { label: string; value: string }[] = [
-    { label: 'Garment', value: garment ? apparelPricing.garments[garment].label : '—' },
-    { label: 'Size', value: size },
-    { label: 'Quantity', value: `${quantity}` },
-    { label: 'Print', value: printSide === 'front' ? 'Front' : printSide === 'back' ? 'Back' : 'Both sides' },
-  ];
+  const summaryLines: { label: string; value: string }[] = [];
+  lines.forEach((line, i) => {
+    const qty = getLineTotal(line.sizeQtys);
+    if (qty > 0) {
+      const parts = SIZES.filter((s) => (line.sizeQtys[s] ?? 0) > 0).map((s) => `${line.sizeQtys[s]}${s}`);
+      summaryLines.push({
+        label: apparelPricing.garments[line.garment].label,
+        value: `${qty} (${parts.join(', ')})`,
+      });
+    }
+  });
+  if (summaryLines.length === 0) summaryLines.push({ label: 'Order', value: '—' });
+  summaryLines.push({ label: 'Print', value: printSide === 'front' ? 'Front' : printSide === 'back' ? 'Back' : 'Both' });
   if (extraColor) summaryLines.push({ label: 'Extra color', value: '+$2/shirt' });
   if (designHelp) summaryLines.push({ label: 'Design', value: '+$50' });
   if (rush) summaryLines.push({ label: 'Rush', value: '+30%' });
 
   const canProceed = () => {
-    if (step === 1) return !!garment;
-    if (step === 6) return uploadedFile || needsDesignHelp || designHelp;
-    if (step === 7) return !!(customer.name && customer.email);
+    if (step === 1) return totalQty >= 15;
+    if (step === 4) return uploadedFile || needsDesignHelp || designHelp;
+    if (step === 5) return !!(customer.name && customer.email);
     return true;
   };
 
   const handleSubmit = () => {
-    console.log('T-shirt order', { garment, size, quantity, total, customer });
+    console.log('Apparel order', { lines, totalQty, total, customer });
     navigate('/thank-you');
+  };
+
+  const updateLine = (index: number, updates: Partial<GarmentLine>) => {
+    setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...updates } : l)));
+  };
+
+  const updateSizeQty = (lineIndex: number, size: SizeKey, qty: number) => {
+    setLines((prev) =>
+      prev.map((l, i) =>
+        i === lineIndex ? { ...l, sizeQtys: { ...l.sizeQtys, [size]: Math.max(0, qty) } } : l
+      )
+    );
+  };
+
+  const addLine = () => {
+    setLines((prev) => [...prev, { garment: 'gildan5000', sizeQtys: emptySizeQtys() }]);
+  };
+
+  const removeLine = (index: number) => {
+    if (lines.length > 1) setLines((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -71,86 +123,80 @@ export function TShirtOrderBuilder() {
         <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
           {step === 1 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Pick Your Garment</h2>
-              <p className="mt-2 text-gray-400">Choose your apparel. Minimum 15 pieces.</p>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {(Object.entries(apparelPricing.garments) as [GarmentKey, { base: number; label: string; type: string; image: string }][]).map(
-                  ([key, { base, label, type, image }]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => setGarment(key)}
-                      className={`flex items-center gap-4 rounded-xl border-2 p-4 text-left transition ${
-                        garment === key ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
-                      }`}
+              <h2 className="font-heading text-2xl font-bold text-white">Build Your Order</h2>
+              <p className="mt-2 text-gray-400">
+                Add garments and set quantity per size. Min 15 total. Mix tees, hoodies, and more.
+              </p>
+              <div className="mt-6 space-y-6">
+                {lines.map((line, idx) => {
+                  const lineTotal = getLineTotal(line.sizeQtys);
+                  return (
+                    <div
+                      key={idx}
+                      className="rounded-xl border border-charcoal-50/40 bg-charcoal-400/30 p-4"
                     >
-                      <span className="text-3xl">{image}</span>
-                      <div>
-                        <span className="font-heading text-lg font-bold text-white">{label}</span>
-                        <span className="block text-sm text-gray-400">{type}</span>
-                        <span className="text-gold font-semibold">From ${base}+</span>
+                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <select
+                          value={line.garment}
+                          onChange={(e) => updateLine(idx, { garment: e.target.value as GarmentKey })}
+                          className="rounded-lg border border-charcoal-50/30 bg-charcoal-100 px-3 py-2 text-white focus:border-gold"
+                        >
+                          {(Object.entries(apparelPricing.garments) as [GarmentKey, { label: string }][]).map(
+                            ([key, { label }]) => (
+                              <option key={key} value={key}>
+                                {label}
+                              </option>
+                            )
+                          )}
+                        </select>
+                        <span className="text-sm font-semibold text-gold">Total: {lineTotal}</span>
+                        {lines.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeLine(idx)}
+                            className="text-sm text-red-400 hover:text-red-300"
+                          >
+                            Remove
+                          </button>
+                        )}
                       </div>
-                    </button>
-                  )
-                )}
+                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
+                        {SIZES.map((size) => (
+                          <div key={size}>
+                            <label className="block text-xs text-gray-500">{size}</label>
+                            <input
+                              type="number"
+                              min={0}
+                              value={line.sizeQtys[size] || ''}
+                              onChange={(e) =>
+                                updateSizeQty(idx, size, parseInt(e.target.value, 10) || 0)
+                              }
+                              className="mt-0.5 w-full rounded border border-charcoal-50/30 bg-charcoal-100 px-2 py-1.5 text-center text-white"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+                <button
+                  type="button"
+                  onClick={addLine}
+                  className="w-full rounded-xl border-2 border-dashed border-charcoal-50/40 py-4 text-gold transition hover:border-gold/50 hover:bg-gold/5"
+                >
+                  + Add another garment (e.g. hoodies, long sleeve)
+                </button>
               </div>
+              <p className="mt-4 text-sm text-gray-500">
+                Order total: {totalQty} pieces {totalQty < 15 && '(min 15 required)'}
+              </p>
             </div>
           )}
 
           {step === 2 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Size</h2>
-              <p className="mt-2 text-gray-400">Larger sizes have a small upcharge.</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {SIZES.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setSize(s)}
-                    className={`rounded-xl border-2 px-4 py-2 font-semibold transition ${
-                      size === s ? 'border-gold bg-gold/10 text-gold' : 'border-charcoal-50/30 text-white'
-                    }`}
-                  >
-                    {s}
-                    {apparelPricing.sizeUpcharge[s] > 0 && (
-                      <span className="ml-1 text-xs">+${apparelPricing.sizeUpcharge[s]}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Quantity (min 15)</h2>
-              <div className="mt-6 flex flex-wrap gap-3">
-                {QUICK_QTY.map((q) => (
-                  <button
-                    key={q}
-                    type="button"
-                    onClick={() => setQuantity(q)}
-                    className={`rounded-xl border-2 px-6 py-3 font-semibold transition ${
-                      quantity === q ? 'border-gold bg-gold/10 text-gold' : 'border-charcoal-50/30 text-white'
-                    }`}
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-              <input
-                type="number"
-                min={15}
-                value={quantity}
-                onChange={(e) => setQuantity(Math.max(15, parseInt(e.target.value, 10) || 15))}
-                className="mt-4 w-32 rounded-lg border border-charcoal-50/30 bg-charcoal-100 px-4 py-2 text-white"
-              />
-            </div>
-          )}
-
-          {step === 4 && (
-            <div>
               <h2 className="font-heading text-2xl font-bold text-white">Print Options</h2>
+              <p className="mt-2 text-gray-400">Applies to all garments in your order.</p>
               <div className="mt-6 space-y-4">
                 {[
                   { key: 'front' as const, label: 'Front only', price: 4 },
@@ -164,7 +210,7 @@ export function TShirtOrderBuilder() {
                     }`}
                   >
                     <span className="font-medium text-white">{label}</span>
-                    <span className="text-gold">+${price}/shirt</span>
+                    <span className="text-gold">+${price}/piece</span>
                     <input
                       type="radio"
                       name="print"
@@ -178,31 +224,31 @@ export function TShirtOrderBuilder() {
             </div>
           )}
 
-          {step === 5 && (
+          {step === 3 && (
             <div>
               <h2 className="font-heading text-2xl font-bold text-white">Add-ons</h2>
               <div className="mt-6 space-y-3">
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4">
+                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Extra color</span>
-                  <span className="text-gold">+$2/shirt</span>
+                  <span className="text-gold font-semibold">+$2/piece</span>
                   <input type="checkbox" checked={extraColor} onChange={(e) => setExtraColor(e.target.checked)} className="h-5 w-5 rounded text-gold" />
                 </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4">
+                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Setup</span>
-                  <span className="text-gold">+$30</span>
+                  <span className="text-gold font-semibold">+$30</span>
                   <input type="checkbox" checked={setup} onChange={(e) => setSetup(e.target.checked)} className="h-5 w-5 rounded text-gold" />
                 </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4">
+                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Design</span>
-                  <span className="text-gold">+$50</span>
+                  <span className="text-gold font-semibold">+$50</span>
                   <input type="checkbox" checked={designHelp} onChange={(e) => setDesignHelp(e.target.checked)} className="h-5 w-5 rounded text-gold" />
                 </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4">
+                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Sleeve print</span>
-                  <span className="text-gold">+$3/shirt</span>
+                  <span className="text-gold font-semibold">+$3/piece</span>
                   <input type="checkbox" checked={sleevePrint} onChange={(e) => setSleevePrint(e.target.checked)} className="h-5 w-5 rounded text-gold" />
                 </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4">
+                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Rush (+30%)</span>
                   <input type="checkbox" checked={rush} onChange={(e) => setRush(e.target.checked)} className="h-5 w-5 rounded text-gold" />
                 </label>
@@ -210,7 +256,7 @@ export function TShirtOrderBuilder() {
             </div>
           )}
 
-          {step === 6 && (
+          {step === 4 && (
             <ArtworkUploadStep
               uploadedFile={uploadedFile}
               onFileChange={setUploadedFile}
@@ -219,17 +265,26 @@ export function TShirtOrderBuilder() {
             />
           )}
 
-          {step === 7 && (
+          {step === 5 && (
             <CustomerDetailsStep customer={customer} onChange={setCustomer} />
           )}
 
-          {step === 8 && (
+          {step === 6 && (
             <div>
               <h2 className="font-heading text-2xl font-bold text-white">Review & Submit</h2>
               <div className="mt-6 rounded-xl border border-gold/30 bg-charcoal-400/30 p-6">
-                <p className="text-gray-400">
-                  <span className="text-white">{quantity} {garment ? apparelPricing.garments[garment].label : 'shirts'}</span> — ${total.toFixed(2)}
-                </p>
+                {lines.map((line, i) => {
+                  const qty = getLineTotal(line.sizeQtys);
+                  if (qty === 0) return null;
+                  const parts = SIZES.filter((s) => (line.sizeQtys[s] ?? 0) > 0).map((s) => `${line.sizeQtys[s]} ${s}`);
+                  return (
+                    <p key={i} className="text-gray-400">
+                      <span className="text-white">{qty} {apparelPricing.garments[line.garment].label}</span>
+                      {parts.length > 0 && <span> — {parts.join(', ')}</span>}
+                    </p>
+                  );
+                })}
+                <p className="mt-4 font-bold text-gold">Total: ${total.toFixed(2)}</p>
               </div>
               <div className="mt-6">
                 <CTAButton variant="primary" onClick={handleSubmit}>Submit Order</CTAButton>
@@ -237,16 +292,21 @@ export function TShirtOrderBuilder() {
             </div>
           )}
 
-          {step < 8 && (
+          {step < 6 && (
             <div className="mt-8 flex justify-between">
-              <button type="button" onClick={() => setStep((s) => s - 1)} disabled={step === 1} className="rounded-md px-4 py-2 text-gray-400 hover:text-white disabled:opacity-50">
+              <button
+                type="button"
+                onClick={() => setStep((s) => s - 1)}
+                disabled={step === 1}
+                className="rounded-lg px-4 py-2 text-gray-400 hover:text-white disabled:opacity-50"
+              >
                 Back
               </button>
               <button
                 type="button"
                 onClick={() => setStep((s) => s + 1)}
                 disabled={!canProceed()}
-                className="rounded-md bg-gold px-6 py-2 font-semibold text-charcoal hover:bg-gold-300 disabled:opacity-50"
+                className="rounded-lg bg-gold px-6 py-2 font-bold text-charcoal hover:bg-gold-300 disabled:opacity-50"
               >
                 Next
               </button>
@@ -256,7 +316,11 @@ export function TShirtOrderBuilder() {
       </div>
 
       <div className="mt-8 lg:mt-0">
-        <OrderSummaryPanel lines={summaryLines} total={garment ? total : null} />
+        <OrderSummaryPanel
+          lines={summaryLines}
+          total={totalQty >= 15 ? total : null}
+          footer={totalQty < 15 ? 'Min 15 pieces total' : undefined}
+        />
       </div>
     </div>
   );

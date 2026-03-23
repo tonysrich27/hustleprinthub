@@ -6,6 +6,7 @@ export const PRODUCT_ORDER_ROUTES: Record<string, string> = {
   'car-magnets': '/order/car-magnets',
   decals: '/order/decals',
   'vehicle-wraps': '/order/vehicle-wraps',
+  cards: '/order/cards',
 };
 
 export function getOrderUrl(productSlug: string): string {

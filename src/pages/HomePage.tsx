@@ -7,6 +7,7 @@ import { CTAButton } from '../components/ui/CTAButton';
 import { ProductOptionCard } from '../components/storefront/ProductOptionCard';
 import { PRODUCTS } from '../data/products';
 import { PRODUCT_ORDER_ROUTES } from '../data/productRoutes';
+import { CATEGORY_PAGES } from '../data/categoryPages';
 import { bannerStorefrontData } from '../data/storefront/bannerData';
 import { flyerStorefrontData } from '../data/storefront/flyerData';
 import { carMagnetStorefrontData } from '../data/storefront/carMagnetData';
@@ -66,6 +67,40 @@ export function HomePage() {
       </section>
 
       <SectionDivider thick />
+
+      {/* Category pages - hero + gallery product landing pages */}
+      <Section title="Browse Products" subtitle="Click a category to see examples and start your order">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {CATEGORY_PAGES.map((cat) => (
+            <Link
+              key={cat.id}
+              to={`/category/${cat.slug}`}
+              className="card-hover-gold group flex flex-col overflow-hidden rounded-xl border border-charcoal-50/40 bg-charcoal-100/60 backdrop-blur-sm"
+            >
+              <div className="aspect-[16/10] w-full overflow-hidden">
+                <img
+                  src={cat.heroImage}
+                  alt={cat.title}
+                  className="h-full w-full object-cover transition group-hover:scale-105"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="font-heading text-xl font-bold tracking-wide text-white">
+                  {cat.title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm text-gray-400 line-clamp-2">
+                  {cat.description}
+                </p>
+                <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold transition-all group-hover:gap-2 group-hover:text-gold-300">
+                  View Details <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      <SectionDivider />
 
       {/* Popular Offers */}
       <Section title="Popular Offers" subtitle="Quick options for common needs">
