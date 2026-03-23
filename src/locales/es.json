@@ -1,0 +1,253 @@
+{
+  "common": {
+    "brand": "HUSTLE PRINT HUB",
+    "home": "Inicio",
+    "order": "Pedido",
+    "sponsor": "Patrocinador",
+    "startOrder": "Iniciar Pedido",
+    "toggleMenu": "Abrir menú",
+    "footerTagline": "Patrocinador Oficial de Impresión de HustleFanz",
+    "copyright": "© {{year}} Hustle Print Hub. Todos los derechos reservados.",
+    "viewDetails": "Ver Detalles",
+    "orderNow": "Ordenar Ahora",
+    "startOrderBtn": "Iniciar Pedido",
+    "requestQuote": "Solicitar Cotización",
+    "getQuote": "Obtener Cotización",
+    "becomeSponsor": "Ser Patrocinador",
+    "perSign": "/letrero"
+  },
+  "home": {
+    "updatedPages": "Páginas actualizadas:",
+    "vehicleWraps": "Envoltorios de Vehículos",
+    "decals": "Calcomanías",
+    "apparel": "Ropa",
+    "hero1": "IMPRIME RÁPIDO.",
+    "hero2": "PROMOCIONA MEJOR.",
+    "heroSub": "Banners, letreros, calcomanías, ropa y materiales promocionales para emprendedores, creadores y negocios.",
+    "fastTurnaround": "Entrega Rápida Disponible",
+    "startYourOrder": "Inicia Tu Pedido",
+    "browseProducts": "Explorar Productos",
+    "browseProductsSub": "Haz clic en una categoría para ver ejemplos y comenzar tu pedido",
+    "popularOffers": "Ofertas Populares",
+    "popularOffersSub": "Opciones rápidas para necesidades comunes",
+    "banners": "Banners",
+    "bannersSub": "Elige tu tamaño — banners exteriores de alta calidad. Sube tu diseño o lo creamos por ti.",
+    "chooseSize": "Elige Tu Tamaño",
+    "chooseOption": "Elige Tu Opción",
+    "popularOptions": "Opciones Populares",
+    "yardSigns": "Letreros de Jardín (24×18)",
+    "bestUseCase": "Mejor Uso",
+    "yardSignsBestFor": "Perfectos para bienes raíces, eventos, promociones y marketing empresarial.",
+    "startingAt": "Desde $8.50 cada uno",
+    "volumeDiscounts": "Descuentos por volumen: 1 = $20, 10 = $12 c/u, 50+ = $8.50 c/u",
+    "flyers": "Volantes",
+    "flyersSub": "Volantes de calidad para promociones. Sube tu diseño o lo creamos por ti.",
+    "flyersLabel": "{{count}} volantes",
+    "tShirts": "Playeras",
+    "tShirtsDescription": "Comienza con solo 15 playeras — perfecto para marcas, eventos y negocios.",
+    "startingAt15": "Desde 15 playeras",
+    "tShirtsPricing": "1 lado: $16–$13/playera. 2 lados: $22–$17/playera. Precios por volumen.",
+    "min15Shirts": "Mínimo 15 — $500+ por 25 playeras",
+    "tShirtsAddons": "Extras: color adicional +$2, impresión en manga +$3, diseño +$50",
+    "carMagnets": "Imanes para Auto",
+    "carMagnetsSub": "Letreros magnéticos para vehículos. Sube tu diseño o lo creamos por ti.",
+    "decalsSub": "Calcomanías personalizadas para vehículos, branding y promociones.",
+    "decalsPricing": "$8.50/pie² base",
+    "decalsPackages": "Paquetes: Básico $150, Camión de Trabajo $300, Food Truck $600+",
+    "vehicleWrapsTitle": "Envoltorios de Vehículos",
+    "vehicleWrapsSub": "Envoltorios completos y parciales. Mano de obra $7/pie² + material. Obtén una estimación instantánea.",
+    "instantCalculator": "Calculadora de Precios Instantánea",
+    "vehicleWrapsPricing": "Sedán desde ~$3,150 · Van de carga ~$4,550 · Food truck ~$5,600+",
+    "vehicleWrapsAddons": "Extras: Color completo +$600, Kits de calcomanías disponibles",
+    "whatWePrint": "Lo Que Imprimimos",
+    "whatWePrintSub": "Elige tu producto y comienza",
+    "websites": "Sitios Web y Embudos de Leads",
+    "websitesSub": "Convierte visitantes en leads o clientes",
+    "howItWorks": "Cómo Funciona",
+    "howItWorksSub": "Tres pasos simples",
+    "step1Title": "Elige tu producto",
+    "step1Desc": "Elige entre banners, letreros, calcomanías, mercancía y más.",
+    "step2Title": "Sube tu arte o inspiración",
+    "step2Desc": "Sube tu diseño o lo creamos por ti.",
+    "step3Title": "Envía tu pedido",
+    "step3Desc": "Entrega rápida. Perfecto para negocios, eventos y promociones.",
+    "sponsorTitle": "Socio Oficial de Impresión de HustleFanz",
+    "sponsorSub": "Impresión premium para la comunidad hustle",
+    "sponsorBody": "Hustle Print Hub es el patrocinador oficial de impresión de HustleFanz. Los patrocinadores y vendedores obtienen códigos de descuento exclusivos y soporte prioritario.",
+    "ctaTitle": "¿LISTO PARA IMPRIMIR?",
+    "ctaSub": "Inicia tu pedido ahora. Entrega rápida. Calidad premium.",
+    "ctaDesign": "Sube tu diseño o lo creamos por ti"
+  },
+  "category": {
+    "gallery": "Galería",
+    "readyToOrder": "¿Listo para ordenar?",
+    "readyDesc": "Comienza con tus {{product}} — entrega rápida disponible.",
+    "signs": {
+      "title": "Letreros de Jardín",
+      "description": "Letreros profesionales para bienes raíces, graduaciones, eventos y marketing empresarial. Coroplast 24×18. Una o dos caras. Estacas y acabado brillante disponibles.",
+      "cta": "Iniciar Pedido"
+    },
+    "banners": {
+      "title": "Banners Exteriores",
+      "description": "Banners de vinilo de alta calidad para cercas, vitrinas, eventos y promociones. Rendijas para viento, bolsillos para postes y cuerda disponibles. Entrega rápida.",
+      "cta": "Iniciar Pedido"
+    },
+    "decals": {
+      "title": "Calcomanías de Vinilo",
+      "description": "Calcomanías personalizadas para vehículos, ventanas y branding. Furgonetas de trabajo, food trucks, remolques. Logos, números de teléfono, menús, códigos QR.",
+      "cta": "Solicitar Cotización"
+    },
+    "magnets": {
+      "title": "Imanes para Auto",
+      "description": "Letreros magnéticos para vehículos. Pares 12×18 y 18×24. Fácil de instalar y quitar. Perfectos para agentes inmobiliarios, contratistas y pequeños negocios.",
+      "cta": "Iniciar Pedido"
+    },
+    "cards": {
+      "title": "Tarjetas de Presentación",
+      "description": "Tarjetas de presentación profesionales. Papel estándar y premium. Entrega rápida. Ayuda con diseño disponible.",
+      "cta": "Solicitar Cotización"
+    },
+    "shirts": {
+      "title": "Ropa y Playeras",
+      "description": "Playeras, sudaderas y mangas largas personalizadas. Calidad Gildan. Mín 15 piezas. Combina prendas y tallas. Perfecto para marcas, eventos y negocios.",
+      "cta": "Iniciar Pedido"
+    }
+  },
+  "products": {
+    "banners": { "name": "Banners", "description": "Banners de vinilo para eventos, promociones y letreros" },
+    "yard-signs": { "name": "Letreros de Jardín", "description": "Letreros 24×18 para bienes raíces y eventos" },
+    "flyers": { "name": "Volantes", "description": "Volantes y folletos para promociones" },
+    "t-shirts": { "name": "Playeras", "description": "Playeras impresas personalizadas — mínimo 15" },
+    "car-magnets": { "name": "Imanes para Auto", "description": "Letreros magnéticos para vehículos" },
+    "decals": { "name": "Calcomanías", "description": "Calcomanías de vinilo para vehículos y branding" },
+    "vehicle-wraps": { "name": "Envoltorios de Vehículos", "description": "Envoltorios completos y parciales" },
+    "cards": { "name": "Tarjetas de Presentación", "description": "Tarjetas de presentación profesionales" }
+  },
+  "popularOffers": {
+    "banner3x6": "Banner 3×6",
+    "yardSigns10": "10 Letreros de Jardín",
+    "flyers500": "500 Volantes",
+    "magnets2": "2 Imanes para Auto",
+    "shirts25": "25 Playeras"
+  },
+  "storefront": {
+    "banner": {
+      "options": {
+        "3x6": { "label": "3×6 pies", "bestFor": "Ideal para cercas, stands y eventos pequeños." },
+        "3x8": { "label": "3×8 pies", "bestFor": "Mejor para vitrinas y promociones medianas." },
+        "6x10": { "label": "6×10 pies", "bestFor": "Perfecto para eventos grandes y alta visibilidad." }
+      },
+      "badges": { "starter": "Básico", "mostPopular": "Más Popular", "highVisibility": "Alta Visibilidad" },
+      "addons": { "windSlits": "Rendijas para viento", "polePockets": "Bolsillos para postes", "rope": "Cuerda", "rush": "Urgente", "design": "Ayuda con diseño" }
+    },
+    "yardSign": { "addons": { "stakes": "Estacas", "gloss": "Acabado brillante", "rush": "Urgente", "design": "Ayuda con diseño" } },
+    "flyer": {
+      "options": {
+        "250": { "bestFor": "Ideal para tiradas pequeñas y probar tu mensaje." },
+        "500": { "bestFor": "Mejor valor para marketing local." },
+        "1000": { "bestFor": "Perfecto para eventos y promociones." },
+        "5000": { "bestFor": "Máxima exposición al menor costo." }
+      },
+      "badges": { "mostPopular": "Más Popular", "bestValue": "Mejor Valor" },
+      "addons": { "design": "Ayuda con diseño", "rush": "Urgente" }
+    },
+    "carMagnet": {
+      "options": {
+        "12x18": { "label": "12×18 pulg (par)", "bestFor": "Ideal para vehículos pequeños y branding simple." },
+        "18x24": { "label": "18×24 pulg (par)", "bestFor": "Mejor para camiones, vans y máxima visibilidad." },
+        "business": { "label": "Paquete Empresarial", "bestFor": "Incluye diseño y entrega más rápida." }
+      },
+      "badges": { "mostPopular": "Más Popular", "bestValue": "Mejor Valor" },
+      "addons": { "design": "Ayuda con diseño", "rush": "Urgente" }
+    },
+    "tShirt": { "addons": { "extraColor": "Color adicional", "setup": "Configuración", "design": "Diseño", "sleevePrint": "Impresión en manga", "rush": "Urgente" } }
+  },
+  "order": {
+    "title": "Pedido / Cotización",
+    "intro": "Sigue los pasos — te guiaremos. Sin confusiones.",
+    "decalsTitle": "Calcomanías de Vinilo",
+    "decalsSub": "Calcomanías personalizadas para vehículos, branding y promociones.",
+    "decalsLive": "Precios de Calcomanías en Vivo",
+    "decalsBuilder": {
+      "packages": "Paquetes",
+      "packagesSub": "Elige un paquete o solicita una cotización personalizada.",
+      "packagesBasic": "Kit Básico",
+      "packagesWorkTruck": "Camión de Trabajo",
+      "packagesFoodTruck": "Food Truck",
+      "pricing": "Precios",
+      "pricingNote": "Base: $8.50/pie². Laminado +$1.50/pie². Corte de contorno +15%. Urgente +50%.",
+      "designNote": "Sube tu diseño o lo creamos por ti"
+    },
+    "cardsTitle": "Tarjetas de Presentación",
+    "cardsSub": "Solicita una cotización — te contactaremos con precios y opciones.",
+    "cardsForm": { "name": "Nombre", "email": "Correo electrónico", "quantity": "Cantidad", "notes": "Notas", "namePlaceholder": "Tu nombre", "emailPlaceholder": "tu@ejemplo.com", "notesPlaceholder": "Papel, acabado, necesidades de diseño..." },
+    "bannersTitle": "Constructor de Pedidos de Banners",
+    "bannersSub": "Configura tu banner exterior — el precio se actualiza al seleccionar opciones.",
+    "yardSignsTitle": "Constructor de Pedidos de Letreros 24×18",
+    "yardSignsSub": "Configura tus letreros — el precio se actualiza al seleccionar opciones.",
+    "flyersTitle": "Constructor de Pedidos de Volantes",
+    "flyersSub": "Volantes de calidad — desde $65. Entrega rápida disponible.",
+    "tShirtsTitle": "Constructor de Pedidos de Playeras",
+    "tShirtsLive": "Precios de Ropa en Vivo",
+    "tShirtsSub": "Playeras personalizadas — mínimo 15. Perfecto para marcas, eventos y negocios.",
+    "carMagnetsTitle": "Constructor de Pedidos de Imanes para Auto",
+    "carMagnetsSub": "Letreros magnéticos para vehículos — desde $85. Entrega rápida disponible.",
+    "vehicleWrapsTitle": "Calculadora de Envoltorios para Vehículos",
+    "vehicleWrapsLive": "Constructor de Envoltorios en Vivo",
+    "vehicleWrapsSub": "Obtén un precio estimado. Mano de obra $7/pie² + material. Extras disponibles.",
+    "websiteTitle": "Configuración de Sitio Web y Embudo de Leads",
+    "websiteSub": "Sitios web sencillos que convierten visitantes en leads o clientes."
+  },
+  "thankYou": {
+    "title": "Pedido Recibido",
+    "printBody": "Nuestro equipo de impresión revisará tu pedido pronto.",
+    "websiteBody": "Nuestro equipo revisará tu solicitud de sitio web y te contactará pronto.",
+    "startAnother": "Iniciar Otro Pedido",
+    "returnHome": "Volver al Inicio",
+    "visitSponsor": "Visitar Página de Patrocinadores"
+  },
+  "sponsor": {
+    "heroTitle": "Patrocinador Oficial de Impresión para HustleFanz",
+    "heroSub": "Hustle Print Hub impulsa la impresión para la comunidad HustleFanz. Impresión premium. Precios de socio.",
+    "programTitle": "Programa de Patrocinio de Impresión",
+    "programSub": "El canal dedicado de impresión para HustleFanz",
+    "programBody": "Como patrocinador oficial de impresión de HustleFanz, proporcionamos banners, letreros, calcomanías, ropa y materiales promocionales para emprendedores, creadores, vendedores y negocios. Entrega rápida. Calidad premium.",
+    "benefitsTitle": "Beneficios de Descuento",
+    "benefitsSub": "Por qué ser socio de Hustle Print Hub",
+    "benefit1Title": "Códigos de descuento exclusivos",
+    "benefit1Desc": "Comparte códigos con tu audiencia para precios de socio",
+    "benefit2Title": "Atribución de fuente",
+    "benefit2Desc": "Pedidos etiquetados con tu código para seguimiento e informes",
+    "benefit3Title": "Soporte prioritario",
+    "benefit3Desc": "Entrega más rápida para pedidos de patrocinadores y vendedores",
+    "whoHelpsTitle": "A Quién Ayuda",
+    "whoHelpsSub": "Diseñado para el ecosistema HustleFanz",
+    "sponsorsVendorsTitle": "Patrocinadores y Vendedores",
+    "sponsorsVendorsDesc": "Obtén códigos de descuento exclusivos. Ofrece impresión como parte de tu paquete de vendedor. Rastrea referidos.",
+    "creatorsTitle": "Creadores y Emprendedores",
+    "creatorsDesc": "Ordena banners, mercancía, volantes y gráficos para eventos. Usa tu código de patrocinador para precios de socio.",
+    "applyTitle": "Aplicar / Ser Socio",
+    "applySub": "Obtén tu código de descuento de patrocinador o vendedor. Únete a la red de socios de Hustle Print Hub.",
+    "orderWithCode": "Ordenar con Código de Patrocinador",
+    "returnHome": "Volver al Inicio"
+  },
+  "website": {
+    "name": "Sitio Web y Configuración de Embudo de Leads",
+    "description": "Un sitio web sencillo diseñado para convertir visitantes en leads o clientes.",
+    "packages": {
+      "lead-funnel": { "name": "Embudo de Leads / Página de Aterrizaje", "monthlyLabel": "Alojamiento mensual + automatización" },
+      "business-website": { "name": "Sitio Web Empresarial", "monthlyLabel": "Mantenimiento mensual" }
+    }
+  },
+  "orderSteps": {
+    "productType": "Tipo de Producto",
+    "artworkStatus": "Estado del Arte",
+    "size": "Tamaño",
+    "quantity": "Cantidad",
+    "artworkDesign": "Arte / Diseño",
+    "rushTurnaround": "Entrega Urgente",
+    "contactInfo": "Información de Contacto",
+    "sourceTracking": "Seguimiento de Fuente",
+    "reviewSubmit": "Revisar y Enviar"
+  }
+}

@@ -1,0 +1,253 @@
+{
+  "common": {
+    "brand": "HUSTLE PRINT HUB",
+    "home": "Home",
+    "order": "Order",
+    "sponsor": "Sponsor",
+    "startOrder": "Start Order",
+    "toggleMenu": "Toggle menu",
+    "footerTagline": "Official HustleFanz Print Sponsor",
+    "copyright": "© {{year}} Hustle Print Hub. All rights reserved.",
+    "viewDetails": "View Details",
+    "orderNow": "Order Now",
+    "startOrderBtn": "Start Order",
+    "requestQuote": "Request Quote",
+    "getQuote": "Get Quote",
+    "becomeSponsor": "Become a Sponsor",
+    "perSign": "/sign"
+  },
+  "home": {
+    "updatedPages": "Updated pages:",
+    "vehicleWraps": "Vehicle Wraps",
+    "decals": "Decals",
+    "apparel": "Apparel",
+    "hero1": "PRINT FAST.",
+    "hero2": "PROMOTE SMARTER.",
+    "heroSub": "Banners, signs, decals, apparel and promo materials for hustlers, creators and businesses.",
+    "fastTurnaround": "Fast Turnaround Available",
+    "startYourOrder": "Start Your Order",
+    "browseProducts": "Browse Products",
+    "browseProductsSub": "Click a category to see examples and start your order",
+    "popularOffers": "Popular Offers",
+    "popularOffersSub": "Quick options for common needs",
+    "banners": "Banners",
+    "bannersSub": "Choose your size — high-quality outdoor banners. Upload your design or let us create it for you.",
+    "chooseSize": "Choose Your Size",
+    "chooseOption": "Choose Your Option",
+    "popularOptions": "Popular Options",
+    "yardSigns": "Yard Signs (24×18)",
+    "bestUseCase": "Best Use Case",
+    "yardSignsBestFor": "Perfect for real estate, events, promotions, and business marketing.",
+    "startingAt": "Starting at $8.50 each",
+    "volumeDiscounts": "Volume discounts: 1 = $20, 10 = $12 each, 50+ = $8.50 each",
+    "flyers": "Flyers",
+    "flyersSub": "Quality flyers for promotions. Upload your design or let us create it for you.",
+    "flyersLabel": "{{count}} flyers",
+    "tShirts": "T-Shirts",
+    "tShirtsDescription": "Start with just 15 shirts — perfect for brands, events, and businesses.",
+    "startingAt15": "Starting at 15 shirts",
+    "tShirtsPricing": "1 side: $16–$13/shirt. 2 sides: $22–$17/shirt. Volume pricing applies.",
+    "min15Shirts": "Minimum 15 — $500+ for 25 shirts",
+    "tShirtsAddons": "Add-ons: extra color +$2, sleeve print +$3, design +$50",
+    "carMagnets": "Car Magnets",
+    "carMagnetsSub": "Magnetic signs for vehicles. Upload your design or let us create it for you.",
+    "decalsSub": "Custom decals for vehicles, branding, and promotions.",
+    "decalsPricing": "$8.50/sq ft base",
+    "decalsPackages": "Packages: Basic $150, Work Truck $300, Food Truck $600+",
+    "vehicleWrapsTitle": "Vehicle Wraps",
+    "vehicleWrapsSub": "Full and partial wraps. Labor $7/sq ft + material. Get an instant estimate.",
+    "instantCalculator": "Instant Price Calculator",
+    "vehicleWrapsPricing": "Sedan from ~$3,150 · Cargo van ~$4,550 · Food truck ~$5,600+",
+    "vehicleWrapsAddons": "Add-ons: Full color +$600, Decal kits available",
+    "whatWePrint": "What We Print",
+    "whatWePrintSub": "Choose your product and get started",
+    "websites": "Websites & Lead Funnels",
+    "websitesSub": "Convert visitors into leads or customers",
+    "howItWorks": "How It Works",
+    "howItWorksSub": "Three simple steps",
+    "step1Title": "Choose your product",
+    "step1Desc": "Pick from banners, signs, decals, merch, and more.",
+    "step2Title": "Upload artwork or inspiration",
+    "step2Desc": "Upload your design or let us create it for you.",
+    "step3Title": "Submit your order",
+    "step3Desc": "Fast turnaround. Perfect for businesses, events, and promotions.",
+    "sponsorTitle": "Official Print Partner of HustleFanz",
+    "sponsorSub": "Premium print for the hustle community",
+    "sponsorBody": "Hustle Print Hub is the official print sponsor for HustleFanz. Sponsors and vendors get dedicated discount codes and priority support.",
+    "ctaTitle": "READY TO PRINT?",
+    "ctaSub": "Start your order now. Fast turnaround. Premium quality.",
+    "ctaDesign": "Upload your design or let us create it for you"
+  },
+  "category": {
+    "gallery": "Gallery",
+    "readyToOrder": "Ready to order?",
+    "readyDesc": "Get started with your {{product}} — fast turnaround available.",
+    "signs": {
+      "title": "Yard Signs",
+      "description": "Professional yard signs for real estate, graduations, events, and business marketing. 24×18 coroplast. Single or double-sided. Stakes and gloss options available.",
+      "cta": "Start Order"
+    },
+    "banners": {
+      "title": "Outdoor Banners",
+      "description": "High-quality vinyl banners for fences, storefronts, events, and promotions. Wind slits, pole pockets, and rope available. Fast turnaround.",
+      "cta": "Start Order"
+    },
+    "decals": {
+      "title": "Vinyl Decals",
+      "description": "Custom decals for vehicles, windows, and branding. Work vans, food trucks, trailers. Logos, phone numbers, menus, QR codes.",
+      "cta": "Request Quote"
+    },
+    "magnets": {
+      "title": "Car Magnets",
+      "description": "Magnetic signs for vehicles. 12×18 and 18×24 pairs. Easy to install and remove. Perfect for realtors, contractors, and small businesses.",
+      "cta": "Start Order"
+    },
+    "cards": {
+      "title": "Business Cards",
+      "description": "Professional business cards. Standard and premium stocks. Fast turnaround. Design help available.",
+      "cta": "Request Quote"
+    },
+    "shirts": {
+      "title": "Apparel & T-Shirts",
+      "description": "Custom printed tees, hoodies, and long sleeves. Gildan quality. Min 15 pieces. Mix garments and sizes. Perfect for brands, events, and businesses.",
+      "cta": "Start Order"
+    }
+  },
+  "products": {
+    "banners": { "name": "Banners", "description": "Vinyl banners for events, promotions, and signage" },
+    "yard-signs": { "name": "Yard Signs", "description": "24×18 yard signs for real estate, events" },
+    "flyers": { "name": "Flyers", "description": "Flyers and handbills for promotions" },
+    "t-shirts": { "name": "T-Shirts", "description": "Custom printed tees — minimum 15" },
+    "car-magnets": { "name": "Car Magnets", "description": "Magnetic signs for vehicles" },
+    "decals": { "name": "Decals", "description": "Vinyl decals for vehicles and branding" },
+    "vehicle-wraps": { "name": "Vehicle Wraps", "description": "Full and partial vehicle wraps" },
+    "cards": { "name": "Business Cards", "description": "Professional business cards" }
+  },
+  "popularOffers": {
+    "banner3x6": "3×6 Banner",
+    "yardSigns10": "10 Yard Signs",
+    "flyers500": "500 Flyers",
+    "magnets2": "2 Car Magnets",
+    "shirts25": "25 Shirts"
+  },
+  "storefront": {
+    "banner": {
+      "options": {
+        "3x6": { "label": "3×6 ft", "bestFor": "Great for fences, vendor booths, and small events." },
+        "3x8": { "label": "3×8 ft", "bestFor": "Best for storefronts and medium promotions." },
+        "6x10": { "label": "6×10 ft", "bestFor": "Perfect for large events and high visibility." }
+      },
+      "badges": { "starter": "Starter", "mostPopular": "Most Popular", "highVisibility": "High Visibility" },
+      "addons": { "windSlits": "Wind slits", "polePockets": "Pole pockets", "rope": "Rope", "rush": "Rush", "design": "Design help" }
+    },
+    "yardSign": { "addons": { "stakes": "Stakes", "gloss": "Gloss finish", "rush": "Rush", "design": "Design help" } },
+    "flyer": {
+      "options": {
+        "250": { "bestFor": "Great for small runs and testing your message." },
+        "500": { "bestFor": "Best value for local marketing." },
+        "1000": { "bestFor": "Perfect for events and promotions." },
+        "5000": { "bestFor": "Maximum exposure at lowest cost." }
+      },
+      "badges": { "mostPopular": "Most Popular", "bestValue": "Best Value" },
+      "addons": { "design": "Design help", "rush": "Rush" }
+    },
+    "carMagnet": {
+      "options": {
+        "12x18": { "label": "12×18 in (pair)", "bestFor": "Great for smaller vehicles and simple branding." },
+        "18x24": { "label": "18×24 in (pair)", "bestFor": "Best for trucks, vans, and maximum visibility." },
+        "business": { "label": "Business Package", "bestFor": "Includes design and faster turnaround." }
+      },
+      "badges": { "mostPopular": "Most Popular", "bestValue": "Best Value" },
+      "addons": { "design": "Design help", "rush": "Rush" }
+    },
+    "tShirt": { "addons": { "extraColor": "Extra color", "setup": "Setup", "design": "Design", "sleevePrint": "Sleeve print", "rush": "Rush" } }
+  },
+  "order": {
+    "title": "Order / Quote",
+    "intro": "Follow the steps below — we'll guide you through. No confusion.",
+    "decalsTitle": "Vinyl Decals",
+    "decalsSub": "Custom decals for vehicles, branding, and promotions.",
+    "decalsLive": "Decal Pricing Live",
+    "decalsBuilder": {
+      "packages": "Packages",
+      "packagesSub": "Choose a package or request a custom quote.",
+      "packagesBasic": "Basic Kit",
+      "packagesWorkTruck": "Work Truck",
+      "packagesFoodTruck": "Food Truck",
+      "pricing": "Pricing",
+      "pricingNote": "Base: $8.50/sq ft. Laminate +$1.50/sq ft. Contour cut +15%. Rush +50%.",
+      "designNote": "Upload your design or let us create it for you"
+    },
+    "cardsTitle": "Business Cards",
+    "cardsSub": "Request a quote — we'll contact you with pricing and options.",
+    "cardsForm": { "name": "Name", "email": "Email", "quantity": "Quantity", "notes": "Notes", "namePlaceholder": "Your name", "emailPlaceholder": "you@example.com", "notesPlaceholder": "Stock, finish, design needs..." },
+    "bannersTitle": "Banner Order Builder",
+    "bannersSub": "Configure your outdoor banner — pricing updates as you select options.",
+    "yardSignsTitle": "24×18 Yard Sign Order Builder",
+    "yardSignsSub": "Configure your yard signs — pricing updates as you select options.",
+    "flyersTitle": "Flyers Order Builder",
+    "flyersSub": "Quality flyers — starting at $65. Fast turnaround available.",
+    "tShirtsTitle": "T-Shirts Order Builder",
+    "tShirtsLive": "Apparel Pricing Live",
+    "tShirtsSub": "Custom shirts — minimum 15. Perfect for brands, events, and businesses.",
+    "carMagnetsTitle": "Car Magnets Order Builder",
+    "carMagnetsSub": "Magnetic signs for vehicles — starting at $85. Fast turnaround available.",
+    "vehicleWrapsTitle": "Vehicle Wrap Calculator",
+    "vehicleWrapsLive": "Vehicle Wrap Builder Live",
+    "vehicleWrapsSub": "Get an estimated price. Labor $7/sq ft + material. Add-ons available.",
+    "websiteTitle": "Website & Lead Funnel Setup",
+    "websiteSub": "Simple websites that convert visitors into leads or customers."
+  },
+  "thankYou": {
+    "title": "Order Received",
+    "printBody": "Our print team will review your order shortly.",
+    "websiteBody": "Our team will review your website request and reach out shortly.",
+    "startAnother": "Start Another Order",
+    "returnHome": "Return Home",
+    "visitSponsor": "Visit Sponsor Page"
+  },
+  "sponsor": {
+    "heroTitle": "Official Print Sponsor for HustleFanz",
+    "heroSub": "Hustle Print Hub powers print for the HustleFanz community. Premium print. Partner pricing.",
+    "programTitle": "Print Sponsor Program",
+    "programSub": "The dedicated print lane for HustleFanz",
+    "programBody": "As the official HustleFanz print sponsor, we provide banners, signs, decals, apparel, and promo materials for hustlers, creators, vendors, and businesses. Fast turnaround. Premium quality.",
+    "benefitsTitle": "Discount Benefits",
+    "benefitsSub": "Why partner with Hustle Print Hub",
+    "benefit1Title": "Dedicated discount codes",
+    "benefit1Desc": "Share codes with your audience for partner pricing",
+    "benefit2Title": "Source attribution",
+    "benefit2Desc": "Orders tagged to your code for tracking and reporting",
+    "benefit3Title": "Priority support",
+    "benefit3Desc": "Faster turnaround for sponsor and vendor orders",
+    "whoHelpsTitle": "Who It Helps",
+    "whoHelpsSub": "Built for the HustleFanz ecosystem",
+    "sponsorsVendorsTitle": "Sponsors & Vendors",
+    "sponsorsVendorsDesc": "Get exclusive discount codes. Offer print as part of your vendor package. Track referrals.",
+    "creatorsTitle": "Creators & Hustlers",
+    "creatorsDesc": "Order banners, merch, flyers, and event graphics. Use your sponsor code for partner pricing.",
+    "applyTitle": "Apply / Partner",
+    "applySub": "Get your sponsor or vendor discount code. Join the Hustle Print Hub partner network.",
+    "orderWithCode": "Order with Sponsor Code",
+    "returnHome": "Return Home"
+  },
+  "website": {
+    "name": "Website & Lead Funnel Setup",
+    "description": "A simple website designed to convert visitors into leads or customers.",
+    "packages": {
+      "lead-funnel": { "name": "Lead Funnel / Landing Page", "monthlyLabel": "Monthly hosting + automation" },
+      "business-website": { "name": "Business Website", "monthlyLabel": "Monthly maintenance" }
+    }
+  },
+  "orderSteps": {
+    "productType": "Product Type",
+    "artworkStatus": "Artwork Status",
+    "size": "Size",
+    "quantity": "Quantity",
+    "artworkDesign": "Artwork / Design",
+    "rushTurnaround": "Rush Turnaround",
+    "contactInfo": "Contact Info",
+    "sourceTracking": "Source Tracking",
+    "reviewSubmit": "Review & Submit"
+  }
+}
