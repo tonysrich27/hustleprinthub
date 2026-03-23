@@ -1,12 +1,24 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StepIndicator } from '../../components/ui/StepIndicator';
 import { CTAButton } from '../../components/ui/CTAButton';
+import { DeliveryBadges } from '../../components/order/DeliveryBadges';
+import { DeliverySection } from '../../components/order/DeliverySection';
+import { ProductHeroSection } from '../../components/order/ProductHeroSection';
+import { SizeOptionCard } from '../../components/order/SizeOptionCard';
 import { carMagnetPricing, type CarMagnetKey } from '../../data/carMagnetPricing';
+import { PRODUCTS_WITH_IMAGES } from '../../data/products';
 
-const STEPS = ['Choose Option', 'Add-ons', 'Upload Artwork', 'Review'];
+const STEPS_KEYS = [
+  'orderFlow.chooseProductSize',
+  'orderFlow.productOptions',
+  'orderFlow.uploadArtwork',
+  'orderFlow.orderSummary',
+];
 
 export function CarMagnetOrderBuilder() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [option, setOption] = useState<CarMagnetKey | null>(null);
@@ -15,17 +27,15 @@ export function CarMagnetOrderBuilder() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [needsDesignHelp, setNeedsDesignHelp] = useState(false);
 
-  const basePrice = option ? carMagnetPricing.options[option] : 0;
-  const total =
-    basePrice +
-    (designHelp ? carMagnetPricing.addons.design : 0) +
-    (rush ? carMagnetPricing.addons.rush : 0);
-
-  const optionLabels: Record<CarMagnetKey, string> = {
-    '12x18': '12×18 in (pair)',
-    '18x24': '18×24 in (pair)',
-    business: 'Business Package',
-  };
+  const magnetProduct = PRODUCTS_WITH_IMAGES.find((p) => p.slug === 'magnets');
+  const optionData = option ? carMagnetPricing.options[option] : null;
+  const basePrice = optionData?.price ?? 0;
+  const isQuote = optionData && 'isQuote' in optionData;
+  const total = isQuote
+    ? 0
+    : basePrice +
+      (designHelp ? carMagnetPricing.addons.design : 0) +
+      (rush ? carMagnetPricing.addons.rush : 0);
 
   const canProceed = () => {
     if (step === 1) return !!option;
@@ -41,30 +51,45 @@ export function CarMagnetOrderBuilder() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
       <div className="lg:col-span-2">
-        <StepIndicator currentStep={step} totalSteps={STEPS.length} steps={STEPS} />
+        {magnetProduct && (
+          <>
+            <ProductHeroSection
+              productName={t(magnetProduct.titleKey)}
+              heroImage={magnetProduct.thumbnail}
+              badge="startingAt"
+              badgeValue="85"
+            />
+            <div className="mt-4">
+              <DeliveryBadges badges={['nextDay', 'fastTurnaround']} />
+            </div>
+            <div className="mt-6">
+              <DeliverySection />
+            </div>
+          </>
+        )}
+
+        <StepIndicator
+          currentStep={step}
+          totalSteps={STEPS_KEYS.length}
+          steps={STEPS_KEYS.map((s) => t(s))}
+        />
 
         <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
           {step === 1 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Choose Your Option</h2>
-              <div className="mt-6 grid gap-4 sm:grid-cols-3">
-                {(Object.entries(carMagnetPricing.options) as [CarMagnetKey, number][]).map(
-                  ([key, price]) => (
-                    <button
+              <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.chooseProductSize')}</h2>
+              <p className="mt-2 text-gray-400">Choose your magnet size. See vehicle mockup guide below.</p>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {(Object.entries(carMagnetPricing.options) as [CarMagnetKey, typeof carMagnetPricing.options[CarMagnetKey]][]).map(
+                  ([key, opt]) => (
+                    <SizeOptionCard
                       key={key}
-                      type="button"
+                      selected={option === key}
                       onClick={() => setOption(key)}
-                      className={`rounded-xl border-2 p-5 text-left transition-all ${
-                        option === key
-                          ? 'border-gold bg-gold/10'
-                          : 'border-charcoal-50/30 hover:border-gold/50'
-                      }`}
-                    >
-                      <span className="font-heading text-lg font-bold text-white">
-                        {optionLabels[key]}
-                      </span>
-                      <span className="mt-1 block text-lg font-semibold text-gold">${price}</span>
-                    </button>
+                      label={opt.label}
+                      price={opt.price === 0 ? 'Request Quote' : opt.price}
+                      badge={opt.badge === 'mostPopular' ? 'mostPopular' : undefined}
+                    />
                   )
                 )}
               </div>
@@ -73,7 +98,8 @@ export function CarMagnetOrderBuilder() {
 
           {step === 2 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Add-ons</h2>
+              <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.productOptions')}</h2>
+              <p className="mt-2 text-gray-400">Optional extras.</p>
               <div className="mt-6 space-y-3">
                 <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
                   <span className="font-medium text-white">Design help</span>
@@ -101,7 +127,7 @@ export function CarMagnetOrderBuilder() {
 
           {step === 3 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Upload Artwork</h2>
+              <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.uploadArtwork')}</h2>
               <p className="mt-2 text-gray-400">Upload your design or let us create it for you.</p>
               <div className="mt-6 space-y-4">
                 <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-charcoal-50/50 py-12">
@@ -135,15 +161,16 @@ export function CarMagnetOrderBuilder() {
 
           {step === 4 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Review Your Order</h2>
+              <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.orderSummary')}</h2>
               <div className="mt-6 rounded-xl border border-gold/30 bg-charcoal-400/30 p-6">
                 <p className="text-gray-400">
-                  <span className="text-white">{option && optionLabels[option]}</span> — ${total}
+                  <span className="text-white">{option && carMagnetPricing.options[option].label}</span>
+                  {isQuote ? ' — Request Quote' : ` — $${total}`}
                 </p>
               </div>
               <div className="mt-6">
                 <CTAButton variant="primary" onClick={handleSubmit}>
-                  Order Now
+                  {isQuote ? t('common.requestQuote') : t('common.startOrderBtn')}
                 </CTAButton>
               </div>
             </div>
@@ -176,9 +203,29 @@ export function CarMagnetOrderBuilder() {
         <div className="lg:sticky lg:top-24">
           <div className="rounded-xl border border-charcoal-50/30 bg-charcoal-100/50 p-6">
             <h3 className="font-heading text-lg font-bold text-gold">Order Summary</h3>
-            <p className="mt-2 text-sm text-gray-500">
-              {option ? optionLabels[option] : '—'} — {option ? `$${total}` : '—'}
-            </p>
+            <p className="mt-1 text-xs text-gray-500">Updates in real time</p>
+            <dl className="mt-4 space-y-2 text-sm">
+              <div>
+                <dt className="text-gray-500">Size</dt>
+                <dd className="font-medium text-white">{option ? carMagnetPricing.options[option].label : '—'}</dd>
+              </div>
+              {(designHelp || rush) && (
+                <div>
+                  <dt className="text-gray-500">Extras</dt>
+                  <dd className="font-medium text-white">
+                    {[designHelp && 'Design', rush && 'Rush'].filter(Boolean).join(', ')}
+                  </dd>
+                </div>
+              )}
+            </dl>
+            <div className="mt-4 border-t border-charcoal-50/30 pt-4">
+              <div className="flex justify-between">
+                <span className="font-medium text-gray-500">Total</span>
+                <span className="text-xl font-bold text-gold">
+                  {isQuote ? 'Quote' : total > 0 ? `$${total}` : '—'}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -1,85 +1,129 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StepIndicator } from '../../components/ui/StepIndicator';
 import { CTAButton } from '../../components/ui/CTAButton';
 import { OrderSummaryPanel } from '../../components/order/OrderSummaryPanel';
 import { ArtworkUploadStep } from '../../components/order/ArtworkUploadStep';
 import { CustomerDetailsStep, type CustomerDetails } from '../../components/order/CustomerDetailsStep';
-import { tShirtPricing } from '../../data/tShirtPricing';
-import { apparelPricing, type GarmentKey, type SizeKey } from '../../data/apparelPricing';
+import { ProductHeroSection } from '../../components/order/ProductHeroSection';
+import { DeliveryBadges } from '../../components/order/DeliveryBadges';
+import { DeliverySection } from '../../components/order/DeliverySection';
+import {
+  apparelPricing,
+  ADULT_SIZES,
+  TODDLER_SIZES,
+  type GarmentKey,
+  type SizeKey,
+  type ColorId,
+} from '../../data/apparelPricing';
 
-const STEPS = ['Build Order', 'Print', 'Add-ons', 'Upload', 'Details', 'Submit'];
-const SIZES: SizeKey[] = ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'];
-
-export interface GarmentLine {
-  garment: GarmentKey;
-  sizeQtys: Record<SizeKey, number>;
+export interface ApparelRow {
+  size: SizeKey;
+  colorId: ColorId;
+  qty: number;
 }
 
-function getLineTotal(sizeQtys: Record<SizeKey, number>): number {
-  return SIZES.reduce((sum, s) => sum + (sizeQtys[s] ?? 0), 0);
+export type PrintStyleKey = 'oneSide' | 'frontBack' | 'leftChestBack';
+
+const STEPS_KEYS = [
+  'orderFlow.quantityOrBuild',
+  'orderFlow.productOptions',
+  'orderFlow.extras',
+  'orderFlow.uploadArtwork',
+  'order.contactInfo',
+  'orderFlow.orderSummary',
+];
+
+const PRODUCT_IMAGE = '/images/shirts/shirts.jpg';
+
+function getTotalQty(rows: ApparelRow[]): number {
+  return rows.reduce((sum, r) => sum + r.qty, 0);
 }
 
-function getLineSubtotal(line: GarmentLine, printCost: number): number {
-  const total = getLineTotal(line.sizeQtys);
-  const garmentBase = apparelPricing.garments[line.garment].base;
-  let sum = 0;
-  SIZES.forEach((size) => {
-    const qty = line.sizeQtys[size] ?? 0;
-    if (qty > 0) {
-      const sizeAdd = apparelPricing.sizeUpcharge[size];
-      sum += (garmentBase + printCost + sizeAdd) * qty;
+function getSizeUpcharge(size: SizeKey): number {
+  return apparelPricing.sizeUpcharge[size] ?? 0;
+}
+
+function getPrintPrice(style: PrintStyleKey): number {
+  return apparelPricing.printStyles[style].price;
+}
+
+function calcApparelTotal(
+  garment: GarmentKey,
+  rows: ApparelRow[],
+  printStyle: PrintStyleKey,
+  extraColor: boolean,
+  sleevePrint: boolean,
+  setup: boolean,
+  designHelp: boolean,
+  rush: boolean
+): number {
+  const base = apparelPricing.garments[garment].base;
+  const printCost = getPrintPrice(printStyle);
+  let subtotal = 0;
+  rows.forEach((r) => {
+    if (r.qty > 0) {
+      const upcharge = getSizeUpcharge(r.size);
+      subtotal += (base + printCost + upcharge) * r.qty;
     }
   });
-  return sum;
+  const totalQty = getTotalQty(rows);
+  let total = subtotal;
+  if (extraColor) total += apparelPricing.addons.extraColor * totalQty;
+  if (sleevePrint) total += apparelPricing.addons.sleevePrint * totalQty;
+  if (setup) total += apparelPricing.addons.setup;
+  if (designHelp) total += apparelPricing.addons.design;
+  if (rush) total += subtotal * apparelPricing.addons.rush;
+  return total;
 }
 
-const emptySizeQtys = (): Record<SizeKey, number> =>
-  SIZES.reduce((acc, s) => ({ ...acc, [s]: 0 }), {} as Record<SizeKey, number>);
+const emptyRows = (sizes: readonly SizeKey[]): ApparelRow[] =>
+  sizes.map((size) => ({ size, colorId: 'black', qty: 0 }));
 
 export function TShirtOrderBuilder() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-  const [lines, setLines] = useState<GarmentLine[]>([
-    { garment: 'gildan5000', sizeQtys: emptySizeQtys() },
-  ]);
-  const [printSide, setPrintSide] = useState<'front' | 'back' | 'both'>('front');
+  const [garment, setGarment] = useState<GarmentKey>('gildan5000');
+  const [rows, setRows] = useState<ApparelRow[]>(() => emptyRows(ADULT_SIZES));
+  const [applySameColor, setApplySameColor] = useState(false);
+  const [printStyle, setPrintStyle] = useState<PrintStyleKey>('frontBack');
   const [extraColor, setExtraColor] = useState(false);
+  const [sleevePrint, setSleevePrint] = useState(false);
   const [setup, setSetup] = useState(false);
   const [designHelp, setDesignHelp] = useState(false);
-  const [sleevePrint, setSleevePrint] = useState(false);
   const [rush, setRush] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [needsDesignHelp, setNeedsDesignHelp] = useState(false);
   const [customer, setCustomer] = useState<CustomerDetails>({ name: '', email: '', phone: '', notes: '' });
 
-  const printCost = printSide === 'front' ? 4 : printSide === 'back' ? 4 : 7;
-  let subtotal = 0;
-  lines.forEach((line) => {
-    subtotal += getLineSubtotal(line, printCost);
-  });
-  const totalQty = lines.reduce((sum, line) => sum + getLineTotal(line.sizeQtys), 0);
-  let total = subtotal;
-  if (extraColor) total += tShirtPricing.addons.extraColor * totalQty;
-  if (setup) total += tShirtPricing.addons.setup;
-  if (designHelp) total += tShirtPricing.addons.design;
-  if (sleevePrint) total += tShirtPricing.addons.sleevePrint * totalQty;
-  if (rush) total += subtotal * tShirtPricing.addons.rushPercent;
+  const garmentData = apparelPricing.garments[garment];
+  const sizes = garmentData.sizes;
+  const colors = garmentData.colors;
+  const totalQty = getTotalQty(rows);
+  const total = calcApparelTotal(garment, rows, printStyle, extraColor, sleevePrint, setup, designHelp, rush);
 
-  const summaryLines: { label: string; value: string }[] = [];
-  lines.forEach((line, i) => {
-    const qty = getLineTotal(line.sizeQtys);
-    if (qty > 0) {
-      const parts = SIZES.filter((s) => (line.sizeQtys[s] ?? 0) > 0).map((s) => `${line.sizeQtys[s]}${s}`);
-      summaryLines.push({
-        label: apparelPricing.garments[line.garment].label,
-        value: `${qty} (${parts.join(', ')})`,
-      });
-    }
-  });
-  if (summaryLines.length === 0) summaryLines.push({ label: 'Order', value: '—' });
-  summaryLines.push({ label: 'Print', value: printSide === 'front' ? 'Front' : printSide === 'back' ? 'Back' : 'Both' });
-  if (extraColor) summaryLines.push({ label: 'Extra color', value: '+$2/shirt' });
+  const summaryLines: { label: string; value: string }[] = [
+    { label: 'Product', value: garmentData.label },
+    { label: 'Total Qty', value: `${totalQty}` },
+    {
+      label: 'Print',
+      value: apparelPricing.printStyles[printStyle].label.replace(' (Most Popular)', ''),
+    },
+  ];
+  const rowSummary = rows
+    .filter((r) => r.qty > 0)
+    .map((r) => {
+      const colorLabel = colors.find((c) => c.id === r.colorId)?.label ?? r.colorId;
+      return `${r.qty} ${r.size} ${colorLabel}`;
+    });
+  if (rowSummary.length > 0) {
+    summaryLines.push({ label: 'Breakdown', value: rowSummary.join(', ') });
+  }
+  if (extraColor) summaryLines.push({ label: 'Extra color', value: '+$2/piece' });
+  if (sleevePrint) summaryLines.push({ label: 'Sleeve print', value: '+$3/piece' });
+  if (setup) summaryLines.push({ label: 'Setup', value: '+$30' });
   if (designHelp) summaryLines.push({ label: 'Design', value: '+$50' });
   if (rush) summaryLines.push({ label: 'Rush', value: '+30%' });
 
@@ -91,236 +135,311 @@ export function TShirtOrderBuilder() {
   };
 
   const handleSubmit = () => {
-    console.log('Apparel order', { lines, totalQty, total, customer });
+    console.log('Apparel order', { garment, rows, printStyle, totalQty, total, customer });
     navigate('/thank-you');
   };
 
-  const updateLine = (index: number, updates: Partial<GarmentLine>) => {
-    setLines((prev) => prev.map((l, i) => (i === index ? { ...l, ...updates } : l)));
+  const updateRow = (index: number, updates: Partial<ApparelRow>) => {
+    setRows((prev) => prev.map((r, i) => (i === index ? { ...r, ...updates } : r)));
   };
 
-  const updateSizeQty = (lineIndex: number, size: SizeKey, qty: number) => {
-    setLines((prev) =>
-      prev.map((l, i) =>
-        i === lineIndex ? { ...l, sizeQtys: { ...l.sizeQtys, [size]: Math.max(0, qty) } } : l
-      )
-    );
+  const applyColorToAll = (colorId: ColorId) => {
+    setRows((prev) => prev.map((r) => ({ ...r, colorId })));
   };
 
-  const addLine = () => {
-    setLines((prev) => [...prev, { garment: 'gildan5000', sizeQtys: emptySizeQtys() }]);
-  };
-
-  const removeLine = (index: number) => {
-    if (lines.length > 1) setLines((prev) => prev.filter((_, i) => i !== index));
+  const switchGarment = (newGarment: GarmentKey) => {
+    setGarment(newGarment);
+    const newSizes = apparelPricing.garments[newGarment].sizes;
+    setRows(emptyRows(newSizes));
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
-      <div className="lg:col-span-2">
-        <StepIndicator currentStep={step} totalSteps={STEPS.length} steps={STEPS} />
-
-        <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
-          {step === 1 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Build Your Order</h2>
-              <p className="mt-2 text-gray-400">
-                Add garments and set quantity per size. Min 15 total. Mix tees, hoodies, and more.
-              </p>
-              <div className="mt-6 space-y-6">
-                {lines.map((line, idx) => {
-                  const lineTotal = getLineTotal(line.sizeQtys);
-                  return (
-                    <div
-                      key={idx}
-                      className="rounded-xl border border-charcoal-50/40 bg-charcoal-400/30 p-4"
-                    >
-                      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <select
-                          value={line.garment}
-                          onChange={(e) => updateLine(idx, { garment: e.target.value as GarmentKey })}
-                          className="rounded-lg border border-charcoal-50/30 bg-charcoal-100 px-3 py-2 text-white focus:border-gold"
-                        >
-                          {(Object.entries(apparelPricing.garments) as [GarmentKey, { label: string }][]).map(
-                            ([key, { label }]) => (
-                              <option key={key} value={key}>
-                                {label}
-                              </option>
-                            )
-                          )}
-                        </select>
-                        <span className="text-sm font-semibold text-gold">Total: {lineTotal}</span>
-                        {lines.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeLine(idx)}
-                            className="text-sm text-red-400 hover:text-red-300"
-                          >
-                            Remove
-                          </button>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
-                        {SIZES.map((size) => (
-                          <div key={size}>
-                            <label className="block text-xs text-gray-500">{size}</label>
-                            <input
-                              type="number"
-                              min={0}
-                              value={line.sizeQtys[size] || ''}
-                              onChange={(e) =>
-                                updateSizeQty(idx, size, parseInt(e.target.value, 10) || 0)
-                              }
-                              className="mt-0.5 w-full rounded border border-charcoal-50/30 bg-charcoal-100 px-2 py-1.5 text-center text-white"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-                <button
-                  type="button"
-                  onClick={addLine}
-                  className="w-full rounded-xl border-2 border-dashed border-charcoal-50/40 py-4 text-gold transition hover:border-gold/50 hover:bg-gold/5"
-                >
-                  + Add another garment (e.g. hoodies, long sleeve)
-                </button>
-              </div>
-              <p className="mt-4 text-sm text-gray-500">
-                Order total: {totalQty} pieces {totalQty < 15 && '(min 15 required)'}
-              </p>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Print Options</h2>
-              <p className="mt-2 text-gray-400">Applies to all garments in your order.</p>
-              <div className="mt-6 space-y-4">
-                {[
-                  { key: 'front' as const, label: 'Front only', price: 4 },
-                  { key: 'back' as const, label: 'Back only', price: 4 },
-                  { key: 'both' as const, label: 'Front & back', price: 7 },
-                ].map(({ key, label, price }) => (
-                  <label
-                    key={key}
-                    className={`flex cursor-pointer items-center justify-between rounded-xl border-2 p-4 transition ${
-                      printSide === key ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
-                    }`}
-                  >
-                    <span className="font-medium text-white">{label}</span>
-                    <span className="text-gold">+${price}/piece</span>
-                    <input
-                      type="radio"
-                      name="print"
-                      checked={printSide === key}
-                      onChange={() => setPrintSide(key)}
-                      className="h-5 w-5 text-gold"
-                    />
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Add-ons</h2>
-              <div className="mt-6 space-y-3">
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
-                  <span className="font-medium text-white">Extra color</span>
-                  <span className="text-gold font-semibold">+$2/piece</span>
-                  <input type="checkbox" checked={extraColor} onChange={(e) => setExtraColor(e.target.checked)} className="h-5 w-5 rounded text-gold" />
-                </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
-                  <span className="font-medium text-white">Setup</span>
-                  <span className="text-gold font-semibold">+$30</span>
-                  <input type="checkbox" checked={setup} onChange={(e) => setSetup(e.target.checked)} className="h-5 w-5 rounded text-gold" />
-                </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
-                  <span className="font-medium text-white">Design</span>
-                  <span className="text-gold font-semibold">+$50</span>
-                  <input type="checkbox" checked={designHelp} onChange={(e) => setDesignHelp(e.target.checked)} className="h-5 w-5 rounded text-gold" />
-                </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
-                  <span className="font-medium text-white">Sleeve print</span>
-                  <span className="text-gold font-semibold">+$3/piece</span>
-                  <input type="checkbox" checked={sleevePrint} onChange={(e) => setSleevePrint(e.target.checked)} className="h-5 w-5 rounded text-gold" />
-                </label>
-                <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
-                  <span className="font-medium text-white">Rush (+30%)</span>
-                  <input type="checkbox" checked={rush} onChange={(e) => setRush(e.target.checked)} className="h-5 w-5 rounded text-gold" />
-                </label>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <ArtworkUploadStep
-              uploadedFile={uploadedFile}
-              onFileChange={setUploadedFile}
-              needsDesignHelp={needsDesignHelp}
-              onDesignHelpChange={setNeedsDesignHelp}
-            />
-          )}
-
-          {step === 5 && (
-            <CustomerDetailsStep customer={customer} onChange={setCustomer} />
-          )}
-
-          {step === 6 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Review & Submit</h2>
-              <div className="mt-6 rounded-xl border border-gold/30 bg-charcoal-400/30 p-6">
-                {lines.map((line, i) => {
-                  const qty = getLineTotal(line.sizeQtys);
-                  if (qty === 0) return null;
-                  const parts = SIZES.filter((s) => (line.sizeQtys[s] ?? 0) > 0).map((s) => `${line.sizeQtys[s]} ${s}`);
-                  return (
-                    <p key={i} className="text-gray-400">
-                      <span className="text-white">{qty} {apparelPricing.garments[line.garment].label}</span>
-                      {parts.length > 0 && <span> — {parts.join(', ')}</span>}
-                    </p>
-                  );
-                })}
-                <p className="mt-4 font-bold text-gold">Total: ${total.toFixed(2)}</p>
-              </div>
-              <div className="mt-6">
-                <CTAButton variant="primary" onClick={handleSubmit}>Submit Order</CTAButton>
-              </div>
-            </div>
-          )}
-
-          {step < 6 && (
-            <div className="mt-8 flex justify-between">
-              <button
-                type="button"
-                onClick={() => setStep((s) => s - 1)}
-                disabled={step === 1}
-                className="rounded-lg px-4 py-2 text-gray-400 hover:text-white disabled:opacity-50"
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep((s) => s + 1)}
-                disabled={!canProceed()}
-                className="rounded-lg bg-gold px-6 py-2 font-bold text-charcoal hover:bg-gold-300 disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          )}
+    <div className="min-h-screen">
+      <div className="border-b border-charcoal-50/20 bg-charcoal-400/50 px-4 py-6">
+        <div className="mx-auto max-w-6xl">
+          <ProductHeroSection
+            productName={t('order.tShirtsTitle')}
+            heroImage={PRODUCT_IMAGE}
+            badge="bestSeller"
+          />
+          <DeliveryBadges badges={['sameDay', 'fastTurnaround']} className="mt-4" />
         </div>
       </div>
 
-      <div className="mt-8 lg:mt-0">
-        <OrderSummaryPanel
-          lines={summaryLines}
-          total={totalQty >= 15 ? total : null}
-          footer={totalQty < 15 ? 'Min 15 pieces total' : undefined}
-        />
+      <DeliverySection className="mx-auto max-w-6xl px-4 py-4" />
+
+      <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
+        <div className="lg:col-span-2">
+          <StepIndicator currentStep={step} totalSteps={STEPS_KEYS.length} steps={STEPS_KEYS.map((s) => t(s))} />
+
+          <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
+            {step === 1 && (
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.quantityOrBuild')}</h2>
+                <p className="mt-2 text-gray-400">
+                  Build your order by size and color. Mix sizes and colors. Min 15 total.
+                </p>
+
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-400">Garment type</label>
+                  <select
+                    value={garment}
+                    onChange={(e) => switchGarment(e.target.value as GarmentKey)}
+                    className="mt-1 rounded-lg border border-charcoal-50/30 bg-charcoal-100 px-4 py-2 text-white focus:border-gold"
+                  >
+                    {(Object.entries(apparelPricing.garments) as [GarmentKey, typeof garmentData][]).map(
+                      ([key, g]) => (
+                        <option key={key} value={key}>
+                          {g.label}
+                        </option>
+                      )
+                    )}
+                  </select>
+                </div>
+
+                <label className="mt-6 flex cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={applySameColor}
+                    onChange={(e) => setApplySameColor(e.target.checked)}
+                    className="h-4 w-4 rounded text-gold"
+                  />
+                  <span className="text-sm font-medium text-gray-300">Apply same color to all sizes</span>
+                </label>
+
+                {applySameColor ? (
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-400">Color (all sizes)</label>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {colors.map((c) => (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => applyColorToAll(c.id)}
+                            className={`rounded-lg border-2 px-3 py-2 text-sm font-medium transition ${
+                              rows[0]?.colorId === c.id
+                                ? 'border-gold bg-gold/10 text-gold'
+                                : 'border-charcoal-50/30 text-white hover:border-gold/50'
+                            }`}
+                          >
+                            <span className="mr-2 inline-block h-4 w-4 rounded-full border border-gray-600" style={{ backgroundColor: c.hex }} />
+                            {c.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="text-left text-gray-500">
+                            <th className="py-2">Size</th>
+                            <th className="py-2">Qty</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rows.map((r, i) => (
+                            <tr key={i} className="border-t border-charcoal-50/20">
+                              <td className="py-2 font-medium text-white">{r.size}</td>
+                              <td className="py-2">
+                                <input
+                                  type="number"
+                                  min={0}
+                                  value={r.qty || ''}
+                                  onChange={(e) => updateRow(i, { qty: parseInt(e.target.value, 10) || 0 })}
+                                  className="w-20 rounded border border-charcoal-50/30 bg-charcoal-100 px-2 py-1 text-white"
+                                />
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="mt-4 overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-gray-500">
+                          <th className="py-2">Size</th>
+                          <th className="py-2">Color</th>
+                          <th className="py-2">Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {rows.map((r, i) => (
+                          <tr key={i} className="border-t border-charcoal-50/20">
+                            <td className="py-2 font-medium text-white">{r.size}</td>
+                            <td className="py-2">
+                              <select
+                                value={r.colorId}
+                                onChange={(e) => updateRow(i, { colorId: e.target.value as ColorId })}
+                                className="rounded border border-charcoal-50/30 bg-charcoal-100 px-2 py-1 text-white"
+                              >
+                                {colors.map((c) => (
+                                  <option key={c.id} value={c.id}>
+                                    {c.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="py-2">
+                              <input
+                                type="number"
+                                min={0}
+                                value={r.qty || ''}
+                                onChange={(e) => updateRow(i, { qty: parseInt(e.target.value, 10) || 0 })}
+                                className="w-20 rounded border border-charcoal-50/30 bg-charcoal-100 px-2 py-1 text-white"
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <p className="mt-4 text-sm font-semibold text-gold">
+                  Total: {totalQty} pieces {totalQty < 15 && '(min 15 required)'}
+                </p>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.productOptions')}</h2>
+                <p className="mt-2 text-gray-400">Print style applies to all garments. Select one option.</p>
+                <div className="mt-6 space-y-4">
+                  {(Object.entries(apparelPricing.printStyles) as [PrintStyleKey, { label: string; price: number; mostPopular?: boolean }][]).map(
+                    ([key, { label, price, mostPopular }]) => (
+                      <label
+                        key={key}
+                        className={`flex cursor-pointer items-center justify-between rounded-xl border-2 p-4 transition ${
+                          printStyle === key ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
+                        }`}
+                      >
+                        <span className="font-medium text-white">
+                          {label}
+                          {mostPopular && (
+                            <span className="ml-2 rounded bg-gold/20 px-2 py-0.5 text-xs font-bold text-gold">
+                              Most Popular
+                            </span>
+                          )}
+                        </span>
+                        <span className="text-gold">+${price}/piece</span>
+                        <input
+                          type="radio"
+                          name="printStyle"
+                          checked={printStyle === key}
+                          onChange={() => setPrintStyle(key)}
+                          className="h-5 w-5 text-gold"
+                        />
+                      </label>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
+
+            {step === 3 && (
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.extras')}</h2>
+                <div className="mt-6 space-y-3">
+                  <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
+                    <span className="font-medium text-white">Extra color</span>
+                    <span className="font-semibold text-gold">+$2/piece</span>
+                    <input type="checkbox" checked={extraColor} onChange={(e) => setExtraColor(e.target.checked)} className="h-5 w-5 rounded text-gold" />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
+                    <span className="font-medium text-white">Setup</span>
+                    <span className="font-semibold text-gold">+$30</span>
+                    <input type="checkbox" checked={setup} onChange={(e) => setSetup(e.target.checked)} className="h-5 w-5 rounded text-gold" />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
+                    <span className="font-medium text-white">Design</span>
+                    <span className="font-semibold text-gold">+$50</span>
+                    <input type="checkbox" checked={designHelp} onChange={(e) => setDesignHelp(e.target.checked)} className="h-5 w-5 rounded text-gold" />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
+                    <span className="font-medium text-white">Sleeve print</span>
+                    <span className="font-semibold text-gold">+$3/piece</span>
+                    <input type="checkbox" checked={sleevePrint} onChange={(e) => setSleevePrint(e.target.checked)} className="h-5 w-5 rounded text-gold" />
+                  </label>
+                  <label className="flex cursor-pointer items-center justify-between rounded-xl border-2 border-charcoal-50/30 p-4 hover:border-gold/50">
+                    <span className="font-medium text-white">Rush (+30%)</span>
+                    <input type="checkbox" checked={rush} onChange={(e) => setRush(e.target.checked)} className="h-5 w-5 rounded text-gold" />
+                  </label>
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
+              <ArtworkUploadStep
+                uploadedFile={uploadedFile}
+                onFileChange={setUploadedFile}
+                needsDesignHelp={needsDesignHelp}
+                onDesignHelpChange={setNeedsDesignHelp}
+              />
+            )}
+
+            {step === 5 && <CustomerDetailsStep customer={customer} onChange={setCustomer} />}
+
+            {step === 6 && (
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.orderSummary')}</h2>
+                <div className="mt-6 rounded-xl border border-gold/30 bg-charcoal-400/30 p-6">
+                  {rows
+                    .filter((r) => r.qty > 0)
+                    .map((r, i) => {
+                      const colorLabel = colors.find((c) => c.id === r.colorId)?.label ?? r.colorId;
+                      return (
+                        <p key={i} className="text-gray-400">
+                          <span className="text-white">
+                            {r.qty} {r.size} {colorLabel}
+                          </span>
+                        </p>
+                      );
+                    })}
+                  <p className="mt-4 font-bold text-gold">Total: ${total.toFixed(2)}</p>
+                </div>
+                <div className="mt-6">
+                  <CTAButton variant="primary" onClick={handleSubmit}>
+                    Submit Order
+                  </CTAButton>
+                </div>
+              </div>
+            )}
+
+            {step < 6 && (
+              <div className="mt-8 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => setStep((s) => s - 1)}
+                  disabled={step === 1}
+                  className="rounded-lg px-4 py-2 text-gray-400 hover:text-white disabled:opacity-50"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStep((s) => s + 1)}
+                  disabled={!canProceed()}
+                  className="rounded-lg bg-gold px-6 py-2 font-bold text-charcoal hover:bg-gold-300 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-8 lg:mt-0">
+          <OrderSummaryPanel
+            lines={summaryLines}
+            total={totalQty >= 15 ? total : null}
+            footer={totalQty < 15 ? 'Min 15 pieces total' : undefined}
+          />
+        </div>
       </div>
     </div>
   );

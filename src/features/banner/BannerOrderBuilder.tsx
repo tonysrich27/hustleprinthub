@@ -1,30 +1,40 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StepIndicator } from '../../components/ui/StepIndicator';
 import { CTAButton } from '../../components/ui/CTAButton';
+import { DeliveryBadges } from '../../components/order/DeliveryBadges';
+import { DeliverySection } from '../../components/order/DeliverySection';
+import { ProductHeroSection } from '../../components/order/ProductHeroSection';
+import { SizeOptionCard } from '../../components/order/SizeOptionCard';
 import { bannerPricing, type BannerSizeKey } from '../../data/bannerPricing';
+import { PRODUCTS_WITH_IMAGES } from '../../data/products';
 
 const BANNER_STEPS = [
-  'Choose Size',
-  'Print Sides',
-  'Finishing',
-  'Extras',
-  'Upload Artwork',
-  'Order Summary',
+  'orderFlow.chooseProductSize',
+  'orderFlow.quantityOrBuild',
+  'orderFlow.productOptions',
+  'orderFlow.extras',
+  'orderFlow.uploadArtwork',
+  'orderFlow.orderSummary',
 ];
 
 export function BannerOrderBuilder() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [size, setSize] = useState<BannerSizeKey | 'custom' | null>(null);
   const [doubleSided, setDoubleSided] = useState(false);
-  const [windSlits, setWindSlits] = useState(false);
+  const [grommets, setGrommets] = useState(false);
   const [polePockets, setPolePockets] = useState(false);
+  const [windSlits, setWindSlits] = useState(false);
   const [rope, setRope] = useState(false);
   const [rush, setRush] = useState(false);
   const [designHelp, setDesignHelp] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [needsDesignHelp, setNeedsDesignHelp] = useState(false);
+
+  const bannerProduct = PRODUCTS_WITH_IMAGES.find((p) => p.slug === 'banners');
 
   const isCustomSize = size === 'custom';
   const totalSteps = BANNER_STEPS.length;
@@ -37,14 +47,15 @@ export function BannerOrderBuilder() {
     const baseTotal = doubleSided ? sizeData.doubleTotal : sizeData.base;
     let total = baseTotal;
 
-    if (windSlits) total += bannerPricing.addons.windSlits;
+    if (grommets) total += bannerPricing.addons.grommets;
     if (polePockets) total += bannerPricing.addons.polePockets;
+    if (windSlits) total += bannerPricing.addons.windSlits;
     if (rope) total += bannerPricing.addons.rope;
     if (rush) total += bannerPricing.addons.rush;
     if (designHelp) total += bannerPricing.addons.design;
 
     return total;
-  }, [size, doubleSided, windSlits, polePockets, rope, rush, designHelp, isCustomSize]);
+  }, [size, doubleSided, grommets, polePockets, windSlits, rope, rush, designHelp, isCustomSize]);
 
   const total = calculateTotal();
 
@@ -79,17 +90,17 @@ export function BannerOrderBuilder() {
       <dl className="mt-4 space-y-2 text-sm">
         <div>
           <dt className="text-gray-500">Size</dt>
-          <dd className="font-medium text-white">{size === 'custom' ? 'Custom (Quote)' : size ?? '—'}</dd>
+          <dd className="font-medium text-white">{size === 'custom' ? 'Custom (Quote)' : size ? `${size} ft` : '—'}</dd>
         </div>
         <div>
           <dt className="text-gray-500">Print sides</dt>
           <dd className="font-medium text-white">{doubleSided ? 'Double-sided' : 'Single-sided'}</dd>
         </div>
-        {(windSlits || polePockets || rope) && (
+        {(grommets || polePockets || windSlits || rope) && (
           <div>
             <dt className="text-gray-500">Finishing</dt>
             <dd className="font-medium text-white">
-              {[windSlits && 'Wind slits', polePockets && 'Pole pockets', rope && 'Rope'].filter(Boolean).join(', ')}
+              {[grommets && 'Grommets', polePockets && 'Pole pockets', windSlits && 'Wind slits', rope && 'Rope'].filter(Boolean).join(', ')}
             </dd>
           </div>
         )}
@@ -114,41 +125,48 @@ export function BannerOrderBuilder() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
       <div className="lg:col-span-2">
-        <div className="mb-6 text-center md:text-left">
-          <h1 className="font-heading text-2xl font-bold tracking-wide text-white md:text-3xl">
-            High-Quality Outdoor Banners — Starting at $90
-          </h1>
-          <p className="mt-2 text-gold font-medium">Fast Turnaround Available</p>
-        </div>
+        {bannerProduct && (
+          <>
+            <ProductHeroSection
+              productName={t(bannerProduct.titleKey)}
+              heroImage={bannerProduct.thumbnail}
+              badge="startingAt"
+              badgeValue="90"
+            />
+            <div className="mt-4">
+              <DeliveryBadges badges={['nextDay', 'fastTurnaround']} />
+            </div>
+            <div className="mt-6">
+              <DeliverySection />
+            </div>
+          </>
+        )}
 
         <StepIndicator
           currentStep={currentStep}
           totalSteps={totalSteps}
-          steps={BANNER_STEPS}
+          steps={BANNER_STEPS.map((s) => t(s))}
         />
 
         <div className="rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 transition-shadow hover:shadow-lg md:p-8">
           {/* STEP 1 — Choose Size */}
           {currentStep === 1 && (
             <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Choose Size</h2>
-              <p className="mt-2 text-gray-400">Select your banner dimensions.</p>
+              <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.chooseProductSize')}</h2>
+              <p className="mt-2 text-gray-400">Choose your banner size (see size guide below).</p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {(Object.entries(bannerPricing.sizes) as [BannerSizeKey, { base: number }][]).map(([key, { base }]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSize(key)}
-                    className={`flex flex-col rounded-xl border-2 p-5 text-left transition-all ${
-                      size === key
-                        ? 'border-gold bg-gold/10 shadow-lg'
-                        : 'border-charcoal-50/30 hover:border-gold/50 hover:bg-charcoal-50/20'
-                    }`}
-                  >
-                    <span className="font-heading text-xl font-bold text-white">{key} ft</span>
-                    <span className="mt-1 text-lg font-semibold text-gold">${base}</span>
-                  </button>
-                ))}
+                {(Object.entries(bannerPricing.sizes) as [BannerSizeKey, { base: number; badge: string | null }][]).map(
+                  ([key, { base, badge }]) => (
+                    <SizeOptionCard
+                      key={key}
+                      selected={size === key}
+                      onClick={() => setSize(key)}
+                      label={`${key} ft`}
+                      price={base}
+                      badge={badge === 'mostPopular' ? 'mostPopular' : undefined}
+                    />
+                  )
+                )}
                 <button
                   type="button"
                   onClick={() => setSize('custom')}
@@ -218,11 +236,12 @@ export function BannerOrderBuilder() {
           {currentStep === 3 && (
             <div>
               <h2 className="font-heading text-2xl font-bold text-white">Add Finishing Options</h2>
-              <p className="mt-2 text-gray-400">Optional upgrades for your banner.</p>
+              <p className="mt-2 text-gray-400">Grommets, pole pockets, wind slits — choose what you need.</p>
               <div className="mt-6 space-y-3">
                 {[
-                  { key: 'windSlits', label: 'Wind slits', price: 15, checked: windSlits, set: setWindSlits },
+                  { key: 'grommets', label: 'Grommets', price: 15, checked: grommets, set: setGrommets },
                   { key: 'polePockets', label: 'Pole pockets', price: 20, checked: polePockets, set: setPolePockets },
+                  { key: 'windSlits', label: 'Wind slits', price: 15, checked: windSlits, set: setWindSlits },
                   { key: 'rope', label: 'Rope', price: 15, checked: rope, set: setRope },
                 ].map(({ label, price, checked, set }) => (
                   <label
@@ -347,11 +366,11 @@ export function BannerOrderBuilder() {
                     <dt className="text-gray-500">Print sides</dt>
                     <dd className="font-medium text-white">{doubleSided ? 'Double-sided' : 'Single-sided'}</dd>
                   </div>
-                  {(windSlits || polePockets || rope) && (
+                  {(grommets || polePockets || windSlits || rope) && (
                     <div className="flex justify-between">
                       <dt className="text-gray-500">Finishing</dt>
                       <dd className="font-medium text-white">
-                        {[windSlits && 'Wind slits', polePockets && 'Pole pockets', rope && 'Rope'].filter(Boolean).join(', ')}
+                        {[grommets && 'Grommets', polePockets && 'Pole pockets', windSlits && 'Wind slits', rope && 'Rope'].filter(Boolean).join(', ')}
                       </dd>
                     </div>
                   )}

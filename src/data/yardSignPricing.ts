@@ -1,41 +1,36 @@
 /**
- * Yard Sign (24x18) pricing configuration
+ * Yard Sign pricing - sizes 12x18, 18x24 (Most Popular), 24x36
  * Quantity tiers for single/double-sided, per-sign and flat add-ons
  */
 export const yardSignPricing = {
+  sizes: {
+    '12x18': { pricePerSign: 12, badge: null as const },
+    '18x24': { pricePerSign: 15, badge: 'mostPopular' as const },
+    '24x36': { pricePerSign: 22, badge: null as const },
+  },
   singleSided: [
-    { min: 1, max: 1, pricePerSign: 20 },
-    { min: 2, max: 9, pricePerSign: 15 },
-    { min: 10, max: 30, pricePerSign: 12 },
-    { min: 50, max: Infinity, pricePerSign: 8.5 },
+    { min: 1, max: 9, add: 0 },
+    { min: 10, max: 49, add: -1 },
+    { min: 50, max: Infinity, add: -2 },
   ],
-  doubleSided: [
-    { min: 1, max: 9, addPerSign: 5 },
-    { min: 10, max: 30, addPerSign: 4 },
-    { min: 50, max: Infinity, addPerSign: 3 },
-  ],
+  doubleSidedAddPerSign: 4,
   addons: {
-    stakes: 2, // per sign
-    gloss: 4, // per sign
-    rush: 25, // flat
-    design: 25, // flat
+    stakes: 2,
+    gloss: 4,
+    rush: 25,
+    design: 25,
   },
 } as const;
 
-export function getSinglePricePerSign(quantity: number): number {
-  const tier = yardSignPricing.singleSided.find(
-    (t) => quantity >= t.min && quantity <= t.max
-  );
-  // 31-49 gap: use 10-30 tier ($12)
-  if (!tier && quantity >= 31 && quantity <= 49) return 12;
-  return tier?.pricePerSign ?? 0;
-}
+export type YardSignSizeKey = keyof typeof yardSignPricing.sizes;
 
-export function getDoubleAddPerSign(quantity: number): number {
-  const tier = yardSignPricing.doubleSided.find(
-    (t) => quantity >= t.min && quantity <= t.max
-  );
-  // 31-49 gap: use 10-30 tier (+$4)
-  if (!tier && quantity >= 31 && quantity <= 49) return 4;
-  return tier?.addPerSign ?? 0;
+export function getYardSignPricePerSign(
+  size: YardSignSizeKey,
+  quantity: number,
+  doubleSided: boolean
+): number {
+  const base = yardSignPricing.sizes[size].pricePerSign;
+  const tier = yardSignPricing.singleSided.find((t) => quantity >= t.min && quantity <= t.max);
+  const adjusted = base + (tier?.add ?? 0);
+  return doubleSided ? adjusted + yardSignPricing.doubleSidedAddPerSign : adjusted;
 }

@@ -1,20 +1,34 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { StepIndicator } from '../../components/ui/StepIndicator';
 import { CTAButton } from '../../components/ui/CTAButton';
 import { OrderSummaryPanel } from '../../components/order/OrderSummaryPanel';
 import { ArtworkUploadStep } from '../../components/order/ArtworkUploadStep';
 import { CustomerDetailsStep, type CustomerDetails } from '../../components/order/CustomerDetailsStep';
+import { ProductHeroSection } from '../../components/order/ProductHeroSection';
+import { DeliveryBadges } from '../../components/order/DeliveryBadges';
+import { DeliverySection } from '../../components/order/DeliverySection';
+import { SizeOptionCard } from '../../components/order/SizeOptionCard';
 import { flyerPricing, type FlyerSizeKey, type FlyerPaperKey } from '../../data/flyerPricing';
 
-const STEPS = ['Size', 'Print & Paper', 'Quantity', 'Add-ons', 'Upload Artwork', 'Your Details', 'Submit'];
+const STEPS_KEYS = [
+  'orderFlow.chooseProductSize',
+  'orderFlow.quantityOrBuild',
+  'orderFlow.productOptions',
+  'orderFlow.extras',
+  'orderFlow.uploadArtwork',
+  'order.contactInfo',
+  'orderFlow.orderSummary',
+];
 
 export function FlyerOrderBuilder() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [size, setSize] = useState<FlyerSizeKey | null>(null);
   const [doubleSided, setDoubleSided] = useState(true);
-  const [paper, setPaper] = useState<FlyerPaperKey>('standard');
+  const [paper, setPaper] = useState<FlyerPaperKey>('matte');
   const [quantity, setQuantity] = useState(500);
   const [designHelp, setDesignHelp] = useState(false);
   const [rush, setRush] = useState(false);
@@ -26,7 +40,7 @@ export function FlyerOrderBuilder() {
   const sizeData = size && size in flyerPricing.sizes ? flyerPricing.sizes[size] : null;
   const basePer100 = sizeData?.basePer100 ?? 0;
   const multiplier = doubleSided ? flyerPricing.doubleSidedMultiplier : 1;
-  const paperAdd = flyerPricing.paper[paper].addPerSheet;
+  const paperAdd = paper in flyerPricing.paper ? flyerPricing.paper[paper as FlyerPaperKey].addPerSheet : 0;
 
   const sheetsCost = (quantity / 100) * basePer100 * multiplier;
   const paperCost = paperAdd > 0 ? quantity * paperAdd : 0;
@@ -37,7 +51,7 @@ export function FlyerOrderBuilder() {
   const summaryLines: { label: string; value: string }[] = [
     { label: 'Size', value: sizeData?.label ?? '—' },
     { label: 'Print', value: doubleSided ? 'Double-sided' : 'Single-sided' },
-    { label: 'Paper', value: flyerPricing.paper[paper].label },
+    { label: 'Paper', value: paper in flyerPricing.paper ? flyerPricing.paper[paper].label : '—' },
     { label: 'Quantity', value: isCustom ? '—' : `${quantity}` },
   ];
   if (designHelp) summaryLines.push({ label: 'Design help', value: '+$25' });
@@ -56,34 +70,45 @@ export function FlyerOrderBuilder() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
-      <div className="lg:col-span-2">
-        <StepIndicator currentStep={step} totalSteps={STEPS.length} steps={STEPS} />
+    <div className="min-h-screen">
+      <div className="border-b border-charcoal-50/20 bg-charcoal-400/50 px-4 py-6">
+        <div className="mx-auto max-w-6xl">
+          <ProductHeroSection
+            productName={t('order.flyersTitle')}
+            badge="startingAt"
+            badgeValue="35"
+          />
+          <DeliveryBadges badges={['sameDay', 'fastTurnaround']} className="mt-4" />
+        </div>
+      </div>
 
-        <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
-          {step === 1 && (
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-white">Choose Size</h2>
-              <p className="mt-2 text-gray-400">Select your flyer dimensions.</p>
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                {(Object.entries(flyerPricing.sizes) as [FlyerSizeKey, { basePer100: number; label: string }][]).map(
-                  ([key, { basePer100: b, label }]) => (
-                    <button
-                      key={key}
-                      type="button"
-                      onClick={() => setSize(key)}
-                      className={`rounded-xl border-2 p-5 text-left transition ${
-                        size === key ? 'border-gold bg-gold/10' : 'border-charcoal-50/30 hover:border-gold/50'
-                      }`}
-                    >
-                      <span className="font-heading text-lg font-bold text-white">{label}</span>
-                      {key !== 'custom' && <span className="mt-1 block text-gold">From ${b}/100</span>}
-                    </button>
-                  )
-                )}
+      <DeliverySection className="mx-auto max-w-6xl px-4 py-4" />
+
+      <div className="mx-auto max-w-6xl px-4 py-6 md:px-6 lg:grid lg:grid-cols-3 lg:gap-12">
+        <div className="lg:col-span-2">
+          <StepIndicator currentStep={step} totalSteps={STEPS_KEYS.length} steps={STEPS_KEYS.map((s) => t(s))} />
+
+          <div className="mt-6 rounded-xl border border-charcoal-50/30 bg-charcoal-100/30 p-6 md:p-8">
+            {step === 1 && (
+              <div>
+                <h2 className="font-heading text-2xl font-bold text-white">{t('orderFlow.chooseProductSize')}</h2>
+                <p className="mt-2 text-gray-400">Select your flyer size (see size guide below). Flow starts with size — artwork comes last.</p>
+                <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                  {(Object.entries(flyerPricing.sizes) as [FlyerSizeKey, { basePer100: number; label: string; badge: string | null }][]).map(
+                    ([key, sizeOpt]) => (
+                      <SizeOptionCard
+                        key={key}
+                        selected={size === key}
+                        onClick={() => setSize(key)}
+                        label={sizeOpt.label}
+                        price={key === 'custom' ? 'Quote' : `$${sizeOpt.basePer100}/100`}
+                        badge={sizeOpt.badge === 'mostPopular' ? 'mostPopular' : undefined}
+                      />
+                    )
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {step === 2 && (
             <div>
@@ -202,11 +227,12 @@ export function FlyerOrderBuilder() {
               </button>
             </div>
           )}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-8 lg:mt-0">
-        <OrderSummaryPanel lines={summaryLines} total={isCustom ? null : total} footer={isCustom ? 'Custom quote' : undefined} />
+        <div className="mt-8 lg:mt-0">
+          <OrderSummaryPanel lines={summaryLines} total={isCustom ? null : total} footer={isCustom ? 'Custom quote' : undefined} />
+        </div>
       </div>
     </div>
   );

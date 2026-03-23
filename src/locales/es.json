@@ -197,7 +197,8 @@
     "vehicleWrapsLive": "Constructor de Envoltorios en Vivo",
     "vehicleWrapsSub": "Obtén un precio estimado. Mano de obra $7/pie² + material. Extras disponibles.",
     "websiteTitle": "Configuración de Sitio Web y Embudo de Leads",
-    "websiteSub": "Sitios web sencillos que convierten visitantes en leads o clientes."
+    "websiteSub": "Sitios web sencillos que convierten visitantes en leads o clientes.",
+    "contactInfo": "Información de Contacto"
   },
   "thankYou": {
     "title": "Pedido Recibido",
@@ -250,5 +251,28 @@
     "contactInfo": "Información de Contacto",
     "sourceTracking": "Seguimiento de Fuente",
     "reviewSubmit": "Revisar y Enviar"
+  },
+  "delivery": {
+    "title": "Entrega y Velocidad",
+    "sameDay": "Mismo Día",
+    "nextDay": "Al Día Siguiente",
+    "fastTurnaround": "Entrega Rápida",
+    "sameDayLabel": "Mismo Día – Volantes, Tarjetas, Ropa",
+    "nextDayLabel": "Al Día Siguiente – Banners y Letreros",
+    "localPickup": "Recoger en Local Disponible",
+    "nationwideShipping": "Envío Nacional"
+  },
+  "productHero": {
+    "bestSeller": "Más Vendido",
+    "nextDayReady": "Listo Al Día Siguiente",
+    "startingAt": "Desde ${{price}}"
+  },
+  "orderFlow": {
+    "chooseProductSize": "Elige el Tamaño del Producto",
+    "quantityOrBuild": "Cantidad o Armado",
+    "productOptions": "Opciones del Producto",
+    "extras": "Extras",
+    "uploadArtwork": "Subir Arte",
+    "orderSummary": "Resumen del Pedido"
   }
 }

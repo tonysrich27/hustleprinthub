@@ -197,7 +197,8 @@
     "vehicleWrapsLive": "Vehicle Wrap Builder Live",
     "vehicleWrapsSub": "Get an estimated price. Labor $7/sq ft + material. Add-ons available.",
     "websiteTitle": "Website & Lead Funnel Setup",
-    "websiteSub": "Simple websites that convert visitors into leads or customers."
+    "websiteSub": "Simple websites that convert visitors into leads or customers.",
+    "contactInfo": "Contact Info"
   },
   "thankYou": {
     "title": "Order Received",
@@ -250,5 +251,28 @@
     "contactInfo": "Contact Info",
     "sourceTracking": "Source Tracking",
     "reviewSubmit": "Review & Submit"
+  },
+  "delivery": {
+    "title": "Delivery & Speed",
+    "sameDay": "Same Day",
+    "nextDay": "Next Day",
+    "fastTurnaround": "Fast Turnaround",
+    "sameDayLabel": "Same Day – Flyers, Business Cards, Apparel",
+    "nextDayLabel": "Next Day – Banners & Yard Signs",
+    "localPickup": "Local Pickup Available",
+    "nationwideShipping": "Nationwide Shipping"
+  },
+  "productHero": {
+    "bestSeller": "Best Seller",
+    "nextDayReady": "Next Day Ready",
+    "startingAt": "Starting at ${{price}}"
+  },
+  "orderFlow": {
+    "chooseProductSize": "Choose Product Size",
+    "quantityOrBuild": "Quantity or Build Order",
+    "productOptions": "Product Options",
+    "extras": "Extras",
+    "uploadArtwork": "Upload Artwork",
+    "orderSummary": "Order Summary"
   }
 }
