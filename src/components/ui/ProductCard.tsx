@@ -1,32 +1,50 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import type { Product } from '../../data/products';
-import { getOrderUrl } from '../../data/productRoutes';
 
 interface ProductCardProps {
   product: Product;
+  /** Optional link override — e.g. /category/signs for browse grid */
+  to?: string;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, to }: ProductCardProps) {
   const { t } = useTranslation();
-  const name = t(`products.${product.slug}.name`, product.name);
-  const description = t(`products.${product.slug}.description`, product.description);
+  const title = t(product.titleKey);
+  const description = t(product.descriptionKey);
+  const ctaLabel = product.ctaKey.startsWith('category.') ? t(product.ctaKey) : t(product.ctaKey);
+  const linkTo = to ?? product.orderRoute;
 
   return (
-    <div className="card-hover-gold group flex flex-col rounded-xl border border-charcoal-50/40 bg-charcoal-100/50 p-6 md:p-8">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-charcoal-50/30 text-4xl ring-1 ring-charcoal-50/20 transition group-hover:bg-gold/10 group-hover:ring-gold/30">
-        {product.icon}
+    <Link
+      to={linkTo}
+      className="card-hover-gold group flex flex-col overflow-hidden rounded-xl border border-charcoal-50/40 bg-charcoal-100/50"
+    >
+      <div className="aspect-[16/10] w-full overflow-hidden bg-charcoal-200/50">
+        {product.thumbnail ? (
+          <img
+            src={product.thumbnail}
+            alt={title}
+            className="h-full w-full object-cover transition group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="text-5xl opacity-70 transition group-hover:scale-110 group-hover:opacity-100">
+              {product.icon ?? '📋'}
+            </span>
+          </div>
+        )}
       </div>
-      <h3 className="font-heading text-2xl font-bold tracking-wide text-white">
-        {name}
-      </h3>
-      <p className="mt-2 text-gray-400">{description}</p>
-      <Link
-        to={getOrderUrl(product.slug)}
-        className="cta-premium mt-6 inline-flex w-fit rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-charcoal hover:bg-gold-300"
-      >
-        {t('common.startOrderBtn')}
-      </Link>
-    </div>
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        <h3 className="font-heading text-xl font-bold tracking-wide text-white md:text-2xl">
+          {title}
+        </h3>
+        <p className="mt-2 flex-1 text-sm text-gray-400">{description}</p>
+        <span className="cta-premium mt-4 inline-flex w-fit items-center gap-1 rounded-lg bg-gold px-4 py-2.5 text-sm font-bold text-charcoal hover:bg-gold-300">
+          {ctaLabel}
+          <span className="transition-transform group-hover:translate-x-1">→</span>
+        </span>
+      </div>
+    </Link>
   );
 }

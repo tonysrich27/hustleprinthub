@@ -6,9 +6,8 @@ import { ProductCard } from '../components/ui/ProductCard';
 import { WebsiteProductCard } from '../components/ui/WebsiteProductCard';
 import { CTAButton } from '../components/ui/CTAButton';
 import { ProductOptionCard } from '../components/storefront/ProductOptionCard';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, PRODUCTS_WITH_IMAGES } from '../data/products';
 import { PRODUCT_ORDER_ROUTES } from '../data/productRoutes';
-import { CATEGORY_PAGES } from '../data/categoryPages';
 import { bannerStorefrontData } from '../data/storefront/bannerData';
 import { flyerStorefrontData } from '../data/storefront/flyerData';
 import { carMagnetStorefrontData } from '../data/storefront/carMagnetData';
@@ -38,9 +37,15 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Hero - Dramatic, cinematic */}
+      {/* Hero - banner image background */}
       <section className="relative min-h-[85vh] overflow-hidden px-4 py-24 md:py-32 texture-overlay">
         <div className="absolute inset-0 bg-charcoal" />
+        <img
+          src="/images/banners/banner-outdoor.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-40"
+          aria-hidden
+        />
         <div className="absolute inset-0 bg-gradient-radial-gold-strong" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-charcoal-400/30 to-charcoal" />
         <div className="absolute left-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]" />
@@ -70,34 +75,15 @@ export function HomePage() {
 
       <SectionDivider thick />
 
-      {/* Category pages */}
+      {/* Category grid - ProductCard with thumbnails, links to category pages */}
       <Section title={t('home.browseProducts')} subtitle={t('home.browseProductsSub')}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {CATEGORY_PAGES.map((cat) => (
-            <Link
-              key={cat.id}
-              to={`/category/${cat.slug}`}
-              className="card-hover-gold group flex flex-col overflow-hidden rounded-xl border border-charcoal-50/40 bg-charcoal-100/60 backdrop-blur-sm"
-            >
-              <div className="aspect-[16/10] w-full overflow-hidden">
-                <img
-                  src={cat.heroImage}
-                  alt={t(`category.${cat.id}.title`)}
-                  className="h-full w-full object-cover transition group-hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-1 flex-col p-5">
-                <h3 className="font-heading text-xl font-bold tracking-wide text-white">
-                  {t(`category.${cat.id}.title`)}
-                </h3>
-                <p className="mt-2 flex-1 text-sm text-gray-400 line-clamp-2">
-                  {t(`category.${cat.id}.description`)}
-                </p>
-                <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold transition-all group-hover:gap-2 group-hover:text-gold-300">
-                  {t('common.viewDetails')} <span className="transition-transform group-hover:translate-x-1">→</span>
-                </span>
-              </div>
-            </Link>
+          {PRODUCTS_WITH_IMAGES.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              to={`/category/${product.slug}`}
+            />
           ))}
         </div>
       </Section>
@@ -305,7 +291,7 @@ export function HomePage() {
       {/* What We Print */}
       <Section title={t('home.whatWePrint')} subtitle={t('home.whatWePrintSub')}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PRODUCTS.filter((p) => PRODUCT_ORDER_ROUTES[p.slug]).map((product) => (
+          {PRODUCTS.filter((p) => PRODUCT_ORDER_ROUTES[p.orderSlug]).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

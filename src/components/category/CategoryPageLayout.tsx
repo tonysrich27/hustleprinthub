@@ -8,9 +8,9 @@ interface CategoryPageLayoutProps {
 
 export function CategoryPageLayout({ category }: CategoryPageLayoutProps) {
   const { t } = useTranslation();
-  const title = t(`category.${category.id}.title`);
-  const description = t(`category.${category.id}.description`);
-  const ctaLabel = t(`category.${category.id}.cta`);
+  const title = t(category.titleKey);
+  const description = t(category.descriptionKey);
+  const ctaLabel = t(category.ctaKey);
 
   return (
     <div className="min-h-screen">
