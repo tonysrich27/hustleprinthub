@@ -1,8 +1,14 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 export function Header() {
+  const { t, i18n } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleLang = () => {
+    i18n.changeLanguage(i18n.language === 'en' ? 'es' : 'en');
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-charcoal-50/30 bg-charcoal/98 backdrop-blur-md">
@@ -11,24 +17,32 @@ export function Header() {
           to="/"
           className="font-heading text-xl font-bold tracking-[0.12em] text-gold transition hover:text-gold-300 md:text-2xl"
         >
-          HUSTLE PRINT HUB
+          {t('common.brand')}
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex md:gap-8">
           <Link to="/" className="text-sm font-medium text-gray-300 transition hover:text-gold md:text-base">
-            Home
+            {t('common.home')}
           </Link>
           <Link to="/order" className="text-sm font-medium text-gray-300 transition hover:text-gold md:text-base">
-            Order
+            {t('common.order')}
           </Link>
           <Link to="/sponsor" className="text-sm font-medium text-gray-300 transition hover:text-gold md:text-base">
-            Sponsor
+            {t('common.sponsor')}
           </Link>
+          <button
+            type="button"
+            onClick={toggleLang}
+            className="text-sm font-medium text-gray-300 transition hover:text-gold md:text-base"
+            title={i18n.language === 'en' ? 'Español' : 'English'}
+          >
+            {i18n.language === 'en' ? 'ES' : 'EN'}
+          </button>
           <Link
             to="/order"
             className="cta-premium rounded-lg bg-gold px-5 py-2.5 text-sm font-bold text-charcoal transition hover:bg-gold-300"
           >
-            Start Order
+            {t('common.startOrder')}
           </Link>
         </nav>
 
@@ -36,7 +50,7 @@ export function Header() {
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="flex h-10 w-10 items-center justify-center rounded-lg text-gray-400 transition hover:bg-charcoal-50/30 hover:text-gold md:hidden"
-          aria-label="Toggle menu"
+          aria-label={t('common.toggleMenu')}
         >
           <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {mobileMenuOpen ? (
@@ -51,20 +65,27 @@ export function Header() {
       {mobileMenuOpen && (
         <nav className="flex flex-col gap-1 border-t border-charcoal-50/30 bg-charcoal-100/80 px-4 py-4 backdrop-blur-md md:hidden">
           <Link to="/" className="rounded-lg py-3 px-3 text-gray-300 transition hover:bg-charcoal-50/30 hover:text-gold" onClick={() => setMobileMenuOpen(false)}>
-            Home
+            {t('common.home')}
           </Link>
           <Link to="/order" className="rounded-lg py-3 px-3 text-gray-300 transition hover:bg-charcoal-50/30 hover:text-gold" onClick={() => setMobileMenuOpen(false)}>
-            Order
+            {t('common.order')}
           </Link>
           <Link to="/sponsor" className="rounded-lg py-3 px-3 text-gray-300 transition hover:bg-charcoal-50/30 hover:text-gold" onClick={() => setMobileMenuOpen(false)}>
-            Sponsor
+            {t('common.sponsor')}
           </Link>
+          <button
+            type="button"
+            onClick={() => { toggleLang(); setMobileMenuOpen(false); }}
+            className="rounded-lg py-3 px-3 text-left text-gray-300 transition hover:bg-charcoal-50/30 hover:text-gold"
+          >
+            {i18n.language === 'en' ? 'Español' : 'English'}
+          </button>
           <Link
             to="/order"
             className="mt-2 rounded-lg bg-gold py-3 text-center font-bold text-charcoal"
             onClick={() => setMobileMenuOpen(false)}
           >
-            Start Order
+            {t('common.startOrder')}
           </Link>
         </nav>
       )}

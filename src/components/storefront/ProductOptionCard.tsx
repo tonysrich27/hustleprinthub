@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export interface ProductOptionCardProps {
   id: string;
   label: string;
   price: number | string;
-  badge?: 'Most Popular' | 'Best Value' | 'Starter' | 'High Visibility' | string | null;
+  badge?: string | null;
+  badgeStyleKey?: 'mostPopular' | 'bestValue' | 'starter' | 'highVisibility';
   bestFor: string;
   to: string;
   aspectRatio?: string;
@@ -12,21 +14,28 @@ export interface ProductOptionCardProps {
 }
 
 const BADGE_STYLES: Record<string, string> = {
-  'Most Popular': 'bg-gold text-charcoal',
-  'Best Value': 'bg-gold/90 text-charcoal',
-  'Starter': 'border border-gold/50 text-gold',
-  'High Visibility': 'border border-gold/30 text-gold',
+  mostPopular: 'bg-gold text-charcoal',
+  bestValue: 'bg-gold/90 text-charcoal',
+  starter: 'border border-gold/50 text-gold',
+  highVisibility: 'border border-gold/30 text-gold',
+  mostpopular: 'bg-gold text-charcoal',
+  bestvalue: 'bg-gold/90 text-charcoal',
+  highvisibility: 'border border-gold/30 text-gold',
 };
 
 export function ProductOptionCard({
   label,
   price,
   badge,
+  badgeStyleKey,
   bestFor,
   to,
   aspectRatio = 'aspect-[4/3]',
   icon = '📋',
 }: ProductOptionCardProps) {
+  const { t } = useTranslation();
+  const styleKey = badgeStyleKey ?? (badge ? (badge.toLowerCase().replace(/\s+/g, '') as keyof typeof BADGE_STYLES) : null);
+
   return (
     <Link
       to={to}
@@ -43,7 +52,7 @@ export function ProductOptionCard({
           {badge && (
             <span
               className={`shrink-0 rounded px-2 py-0.5 text-xs font-semibold ${
-                BADGE_STYLES[badge] ?? 'bg-charcoal-50/50 text-gray-300'
+                (styleKey && BADGE_STYLES[styleKey]) ?? 'bg-charcoal-50/50 text-gray-300'
               }`}
             >
               {badge}
@@ -55,7 +64,7 @@ export function ProductOptionCard({
         </p>
         <p className="mt-2 text-sm text-gray-400">{bestFor}</p>
         <span className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-gold transition-all group-hover:gap-2 group-hover:text-gold-300">
-          Start Order
+          {t('common.startOrderBtn')}
           <span className="transition-transform group-hover:translate-x-1">→</span>
         </span>
       </div>
