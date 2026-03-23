@@ -6,13 +6,15 @@ interface ProductCardProps {
   product: Product;
   /** Optional link override — e.g. /category/signs for browse grid */
   to?: string;
+  /** Optional CTA key override — e.g. "View Details" when linking to category */
+  ctaKey?: string;
 }
 
-export function ProductCard({ product, to }: ProductCardProps) {
+export function ProductCard({ product, to, ctaKey: ctaKeyOverride }: ProductCardProps) {
   const { t } = useTranslation();
   const title = t(product.titleKey);
   const description = t(product.descriptionKey);
-  const ctaLabel = product.ctaKey.startsWith('category.') ? t(product.ctaKey) : t(product.ctaKey);
+  const ctaLabel = t(ctaKeyOverride ?? product.ctaKey);
   const linkTo = to ?? product.orderRoute;
 
   return (

@@ -83,6 +83,7 @@ export function HomePage() {
               key={product.id}
               product={product}
               to={`/category/${product.slug}`}
+              ctaKey="common.viewDetails"
             />
           ))}
         </div>
