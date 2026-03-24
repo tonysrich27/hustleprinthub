@@ -1,7 +1,8 @@
 /**
  * Category page data — derived from central products.ts
- * No hardcoded image paths; all from product data
+ * Hero is always a still image; gallery may include video clips.
  */
+import { isVideoPath } from '../lib/media';
 import type { Product } from './products';
 import { PRODUCTS_WITH_IMAGES } from './products';
 
@@ -16,14 +17,20 @@ export interface CategoryPageData {
   ctaKey: string;
 }
 
+function pickHeroStill(p: Product): string {
+  const still = p.images.find((src) => !isVideoPath(src));
+  return still ?? p.thumbnail;
+}
+
 function productToCategoryPage(p: Product): CategoryPageData {
-  const [heroImage, ...galleryImages] = p.images;
+  const heroImage = pickHeroStill(p);
+  const galleryImages = p.images.filter((src) => src !== heroImage);
   return {
     id: p.id,
     slug: p.slug,
     titleKey: p.titleKey,
     descriptionKey: p.descriptionKey,
-    heroImage: heroImage ?? p.thumbnail,
+    heroImage,
     galleryImages,
     orderRoute: p.orderRoute,
     ctaKey: p.ctaKey,

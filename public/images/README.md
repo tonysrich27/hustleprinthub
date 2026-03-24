@@ -1,26 +1,5 @@
-# Product Images
+# Deprecated: `/public/images`
 
-Organized folder structure. Images are served at `/images/<folder>/<file>`.
+**Assets have moved to [`/public/media/`](../media/README.md).**
 
-## Structure
-
-```
-images/
-├── banners/     # Outdoor banners
-├── cards/       # Business cards
-├── decals/      # Vinyl decals, wraps, window perf
-├── magnets/     # Car magnets
-├── shirts/      # Apparel
-└── signs/       # Yard signs
-```
-
-## Paths
-
-- `/images/banners/banner-outdoor.jpg`
-- `/images/cards/business-cards.jpg`
-- `/images/decals/decal.jpg`
-- `/images/magnets/car-magnet.jpg`
-- `/images/shirts/shirts.jpg`
-- `/images/signs/yard-sign-8ft.jpg`
-
-**Naming:** lowercase, hyphens, descriptive. Supported: JPG, PNG, WebP, GIF
+This folder is kept for an optional `.gitkeep` only. All product thumbnails, galleries, and storefront visuals are registered in `src/data/mediaMap.ts` and `src/data/products.ts` using paths like `/media/banners/banner-outdoor.jpg`.

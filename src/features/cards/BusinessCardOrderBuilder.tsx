@@ -25,7 +25,7 @@ const STEPS_KEYS = [
   'orderFlow.orderSummary',
 ];
 
-const PRODUCT_IMAGE = '/images/cards/business-cards.jpg';
+const PRODUCT_IMAGE = '/media/general/business-cards.jpg';
 
 export function BusinessCardOrderBuilder() {
   const { t } = useTranslation();

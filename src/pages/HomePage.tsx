@@ -6,6 +6,9 @@ import { ProductCard } from '../components/ui/ProductCard';
 import { WebsiteProductCard } from '../components/ui/WebsiteProductCard';
 import { CTAButton } from '../components/ui/CTAButton';
 import { ProductOptionCard } from '../components/storefront/ProductOptionCard';
+import { HeroVideoBackground } from '../components/media/HeroVideoBackground';
+import { MediaScrollRow } from '../components/media/MediaScrollRow';
+import { InlineMediaPreview } from '../components/media/InlineMediaPreview';
 import { PRODUCTS, PRODUCTS_WITH_IMAGES } from '../data/products';
 import { PRODUCT_ORDER_ROUTES } from '../data/productRoutes';
 import { bannerStorefrontData } from '../data/storefront/bannerData';
@@ -15,6 +18,12 @@ import { popularOffers } from '../data/storefront/popularOffers';
 import { yardSignStorefrontData } from '../data/storefront/yardSignData';
 import { tShirtStorefrontData } from '../data/storefront/tShirtData';
 import { decalsStorefrontData } from '../data/storefront/decalsData';
+import {
+  behindTheHustleClips,
+  clientJobsStrip,
+  recentWorkStrip,
+  realInstallsStrip,
+} from '../lib/media';
 
 export function HomePage() {
   const { t } = useTranslation();
@@ -37,15 +46,12 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Hero - banner image background */}
+      {/* Hero — intro video + gradient (still fallback inside component) */}
       <section className="relative min-h-[85vh] overflow-hidden px-4 py-24 md:py-32 texture-overlay">
         <div className="absolute inset-0 bg-charcoal" />
-        <img
-          src={PRODUCTS_WITH_IMAGES.find((p) => p.slug === 'banners')?.thumbnail ?? '/images/banners/banner-outdoor.jpg'}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-40"
-          aria-hidden
-        />
+        <div className="absolute inset-0 opacity-50">
+          <HeroVideoBackground />
+        </div>
         <div className="absolute inset-0 bg-gradient-radial-gold-strong" />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-charcoal-400/30 to-charcoal" />
         <div className="absolute left-1/2 top-1/4 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]" />
@@ -91,6 +97,30 @@ export function HomePage() {
 
       <SectionDivider />
 
+      <Section title={t('home.recentWork')} subtitle={t('home.recentWorkSub')}>
+        <MediaScrollRow items={recentWorkStrip()} />
+      </Section>
+
+      <SectionDivider />
+
+      <Section title={t('home.realInstalls')} subtitle={t('home.realInstallsSub')}>
+        <MediaScrollRow items={realInstallsStrip()} />
+      </Section>
+
+      <SectionDivider />
+
+      <Section title={t('home.clientJobs')} subtitle={t('home.clientJobsSub')}>
+        <MediaScrollRow items={clientJobsStrip()} />
+      </Section>
+
+      <SectionDivider />
+
+      <Section title={t('home.foodTrucksTitle')} subtitle={t('home.foodTrucksSub')}>
+        <InlineMediaPreview category="foodTrucks" count={3} />
+      </Section>
+
+      <SectionDivider />
+
       {/* Popular Offers */}
       <Section title={t('home.popularOffers')} subtitle={t('home.popularOffersSub')}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -116,6 +146,7 @@ export function HomePage() {
 
       {/* Banners */}
       <Section title={t('home.banners')} subtitle={t('home.bannersSub')}>
+        <InlineMediaPreview category="banners" className="mb-8" />
         <div className="mb-8">
           <h3 className="mb-4 font-heading text-lg font-bold tracking-wide text-gold">{t('home.chooseSize')}</h3>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -150,6 +181,7 @@ export function HomePage() {
 
       {/* Yard Signs */}
       <Section title={t('home.yardSigns')} subtitle={t('home.yardSignsBestFor')}>
+        <InlineMediaPreview category="yardSigns" className="mb-6" />
         <div className="mb-6">
           <h3 className="mb-4 font-heading text-lg font-bold text-gold">{t('home.bestUseCase')}</h3>
           <p className="text-gray-400">{t('home.yardSignsBestFor')}</p>
@@ -179,6 +211,7 @@ export function HomePage() {
 
       {/* Flyers */}
       <Section title={t('home.flyers')} subtitle={t('home.flyersSub')}>
+        <InlineMediaPreview category="flyers" count={3} className="mb-6" />
         <div className="mb-6">
           <h3 className="mb-4 font-heading text-lg font-bold text-gold">{t('home.chooseSize')}</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -211,6 +244,7 @@ export function HomePage() {
 
       {/* T-Shirts */}
       <Section title={t('home.tShirts')} subtitle={t('home.tShirtsDescription')}>
+        <InlineMediaPreview category="general" count={3} className="mb-6" />
         <div className="mb-6">
           <h3 className="mb-4 font-heading text-lg font-bold text-gold">{t('home.startingAt15')}</h3>
           <p className="text-gray-400">{t('home.tShirtsPricing')}</p>
@@ -230,6 +264,7 @@ export function HomePage() {
 
       {/* Car Magnets */}
       <Section title={t('home.carMagnets')} subtitle={t('home.carMagnetsSub')}>
+        <InlineMediaPreview category="general" count={4} className="mb-6" />
         <div className="mb-6">
           <h3 className="mb-4 font-heading text-lg font-bold text-gold">{t('home.chooseOption')}</h3>
           <div className="grid gap-4 sm:grid-cols-3">
@@ -262,6 +297,7 @@ export function HomePage() {
 
       {/* Decals */}
       <Section title={t('home.decals')} subtitle={t('home.decalsSub')}>
+        <InlineMediaPreview category="decals" className="mb-6" />
         <div className="card-hover-gold rounded-xl border border-charcoal-50/40 bg-charcoal-100/50 p-6 backdrop-blur-sm">
           <p className="font-heading text-xl font-bold tracking-wide text-white">{t('home.decalsPricing')}</p>
           <p className="mt-1 text-gray-400">{t('home.decalsPackages')}</p>
@@ -277,6 +313,7 @@ export function HomePage() {
 
       {/* Vehicle Wraps */}
       <Section title={t('home.vehicleWrapsTitle')} subtitle={t('home.vehicleWrapsSub')}>
+        <InlineMediaPreview category="wraps" count={3} className="mb-6" />
         <div className="card-hover-gold rounded-xl border border-charcoal-50/40 bg-charcoal-100/50 p-6 backdrop-blur-sm">
           <p className="font-heading text-xl font-bold tracking-wide text-white">{t('home.instantCalculator')}</p>
           <p className="mt-1 text-gray-400">{t('home.vehicleWrapsPricing')}</p>
@@ -338,6 +375,12 @@ export function HomePage() {
             </CTAButton>
           </div>
         </div>
+      </Section>
+
+      <SectionDivider />
+
+      <Section title={t('home.behindTheHustle')} subtitle={t('home.behindTheHustleSub')}>
+        <MediaScrollRow items={behindTheHustleClips()} heavyVideo />
       </Section>
 
       <SectionDivider thick />

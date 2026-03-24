@@ -35,7 +35,7 @@ const STEPS_KEYS = [
   'orderFlow.orderSummary',
 ];
 
-const PRODUCT_IMAGE = '/images/shirts/shirts.jpg';
+const PRODUCT_IMAGE = '/media/general/shirts-apparel.jpg';
 
 function getTotalQty(rows: ApparelRow[]): number {
   return rows.reduce((sum, r) => sum + r.qty, 0);

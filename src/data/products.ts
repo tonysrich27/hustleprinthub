@@ -1,18 +1,18 @@
 /**
  * Central product data — single source for images, i18n keys, and routes.
- * All image paths come from /public/images/{category}/
+ * Visual assets live under /public/media/ (see mediaMap.ts).
  */
 export interface Product {
   id: string;
-  slug: string; // category slug for /category/{slug}
-  orderSlug: string; // for /order/{orderSlug}
+  slug: string;
+  orderSlug: string;
   titleKey: string;
   descriptionKey: string;
   thumbnail: string;
   images: string[];
   orderRoute: string;
   ctaKey: string;
-  icon?: string; // fallback when no image
+  icon?: string;
 }
 
 /** Products with images — used for hero, category grid, gallery pages */
@@ -23,8 +23,14 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 'yard-signs',
     titleKey: 'category.signs.title',
     descriptionKey: 'category.signs.description',
-    thumbnail: '/images/signs/yard-sign-8ft.jpg',
-    images: ['/images/signs/yard-sign-8ft.jpg', '/images/signs/yard-sign-graduation.jpg'],
+    thumbnail: '/media/yard-signs/yard-sign-8ft.jpg',
+    images: [
+      '/media/yard-signs/yard-sign-8ft.jpg',
+      '/media/yard-signs/yard-sign-graduation.jpg',
+      '/media/yard-signs/red-yard-signs.jpg',
+      '/media/yard-signs/car-wash-signs.jpg',
+      '/media/yard-signs/finish-yard-signs.mov',
+    ],
     orderRoute: '/order/yard-signs',
     ctaKey: 'category.signs.cta',
     icon: '🏠',
@@ -35,8 +41,14 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 'banners',
     titleKey: 'category.banners.title',
     descriptionKey: 'category.banners.description',
-    thumbnail: '/images/banners/banner-outdoor.jpg',
-    images: ['/images/banners/banner-outdoor.jpg', '/images/banners/banner-outdoor-3.jpg'],
+    thumbnail: '/media/banners/tap-in-printing-banners.jpg',
+    images: [
+      '/media/banners/tap-in-printing-banners.jpg',
+      '/media/banners/banner-outdoor.jpg',
+      '/media/banners/banner-outdoor-3.jpg',
+      '/media/banners/banner-icons-promo.jpg',
+      '/media/banners/birthday-banner-install.mov',
+    ],
     orderRoute: '/order/banners',
     ctaKey: 'category.banners.cta',
     icon: '🪧',
@@ -47,12 +59,13 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 'decals',
     titleKey: 'category.decals.title',
     descriptionKey: 'category.decals.description',
-    thumbnail: '/images/decals/decal.jpg',
+    thumbnail: '/media/decals/decal.jpg',
     images: [
-      '/images/decals/decal.jpg',
-      '/images/decals/decal-2.jpg',
-      '/images/decals/commercial-car-wrap.jpg',
-      '/images/decals/window-perf.jpg',
+      '/media/decals/decal.jpg',
+      '/media/decals/decal-2.jpg',
+      '/media/decals/commercial-car-wrap.jpg',
+      '/media/decals/window-perf.jpg',
+      '/media/decals/decal-install.mov',
     ],
     orderRoute: '/order/decals',
     ctaKey: 'category.decals.cta',
@@ -64,8 +77,12 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 'car-magnets',
     titleKey: 'category.magnets.title',
     descriptionKey: 'category.magnets.description',
-    thumbnail: '/images/magnets/car-magnet.jpg',
-    images: ['/images/magnets/car-magnet.jpg', '/images/magnets/car-magnet-2.jpg'],
+    thumbnail: '/media/general/car-magnet.jpg',
+    images: [
+      '/media/general/car-magnet.jpg',
+      '/media/general/car-magnet-2.jpg',
+      '/media/general/car-magnet-on-truck.jpg',
+    ],
     orderRoute: '/order/car-magnets',
     ctaKey: 'category.magnets.cta',
     icon: '🧲',
@@ -76,8 +93,8 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 'cards',
     titleKey: 'category.cards.title',
     descriptionKey: 'category.cards.description',
-    thumbnail: '/images/cards/business-cards.jpg',
-    images: ['/images/cards/business-cards.jpg'],
+    thumbnail: '/media/general/business-cards.jpg',
+    images: ['/media/general/business-cards.jpg', '/media/general/business-cards-showcase.jpg'],
     orderRoute: '/order/cards',
     ctaKey: 'category.cards.cta',
     icon: '💳',
@@ -88,15 +105,14 @@ export const PRODUCTS_WITH_IMAGES: Product[] = [
     orderSlug: 't-shirts',
     titleKey: 'category.shirts.title',
     descriptionKey: 'category.shirts.description',
-    thumbnail: '/images/shirts/shirts.jpg',
-    images: ['/images/shirts/shirts.jpg'],
+    thumbnail: '/media/general/shirts-apparel.jpg',
+    images: ['/media/general/shirts-apparel.jpg'],
     orderRoute: '/order/t-shirts',
     ctaKey: 'category.shirts.cta',
     icon: '👕',
   },
 ];
 
-/** Legacy product list for "What We Print" — includes items without dedicated images */
 export const PRODUCTS: Product[] = [
   ...PRODUCTS_WITH_IMAGES,
   {
@@ -105,8 +121,8 @@ export const PRODUCTS: Product[] = [
     orderSlug: 'flyers',
     titleKey: 'products.flyers.name',
     descriptionKey: 'products.flyers.description',
-    thumbnail: '',
-    images: [],
+    thumbnail: '/media/general/business-cards-showcase.jpg',
+    images: ['/media/general/business-cards-showcase.jpg', '/media/flyers/finished-blue-flyers.mov'],
     orderRoute: '/order/flyers',
     ctaKey: 'common.startOrderBtn',
     icon: '📄',
@@ -117,8 +133,13 @@ export const PRODUCTS: Product[] = [
     orderSlug: 'vehicle-wraps',
     titleKey: 'products.vehicle-wraps.name',
     descriptionKey: 'products.vehicle-wraps.description',
-    thumbnail: '',
-    images: [],
+    thumbnail: '/media/wraps/sprinter-wrap.jpg',
+    images: [
+      '/media/wraps/sprinter-wrap.jpg',
+      '/media/decals/commercial-car-wrap.jpg',
+      '/media/food-trucks/food-trailer-wrap-2.jpg',
+      '/media/general/car-magnet-on-truck.jpg',
+    ],
     orderRoute: '/order/vehicle-wraps',
     ctaKey: 'common.getQuote',
     icon: '🚗',

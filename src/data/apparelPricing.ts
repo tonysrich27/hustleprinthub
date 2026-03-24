@@ -26,7 +26,7 @@ export const apparelPricing = {
       sizes: ADULT_SIZES,
       colors: COMMON_COLORS,
       image: '👕',
-      imagePath: '/images/shirts/shirts.jpg',
+      imagePath: '/media/general/shirts-apparel.jpg',
     },
     gildan18500: {
       base: 18,
@@ -35,7 +35,7 @@ export const apparelPricing = {
       sizes: ADULT_SIZES,
       colors: COMMON_COLORS,
       image: '🧥',
-      imagePath: '/images/hoodie-gildan18500.jpg',
+      imagePath: '/media/general/shirts-apparel.jpg',
     },
     gildan5400: {
       base: 8,
@@ -44,7 +44,7 @@ export const apparelPricing = {
       sizes: ADULT_SIZES,
       colors: COMMON_COLORS,
       image: '👔',
-      imagePath: '/images/longsleeve-gildan5400.jpg',
+      imagePath: '/media/general/shirts-apparel.jpg',
     },
     youth5000: {
       base: 5,
@@ -53,7 +53,7 @@ export const apparelPricing = {
       sizes: TODDLER_SIZES,
       colors: COMMON_COLORS,
       image: '👕',
-      imagePath: '/images/youth-5000.jpg',
+      imagePath: '/media/general/shirts-apparel.jpg',
     },
   },
   /** Print style pricing: oneSide (front or back), frontBack (most popular), leftChestBack (premium) */

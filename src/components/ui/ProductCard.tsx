@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import type { Product } from '../../data/products';
+import { ProductCardMedia } from '../media/ProductCardMedia';
 
 interface ProductCardProps {
   product: Product;
@@ -22,21 +23,7 @@ export function ProductCard({ product, to, ctaKey: ctaKeyOverride }: ProductCard
       to={linkTo}
       className="card-hover-gold group flex flex-col overflow-hidden rounded-xl border border-charcoal-50/40 bg-charcoal-100/50"
     >
-      <div className="aspect-[16/10] w-full overflow-hidden bg-charcoal-200/50">
-        {product.thumbnail ? (
-          <img
-            src={product.thumbnail}
-            alt={title}
-            className="h-full w-full object-cover transition group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center">
-            <span className="text-5xl opacity-70 transition group-hover:scale-110 group-hover:opacity-100">
-              {product.icon ?? '📋'}
-            </span>
-          </div>
-        )}
-      </div>
+      <ProductCardMedia product={product} title={title} />
       <div className="flex flex-1 flex-col p-5 md:p-6">
         <h3 className="font-heading text-xl font-bold tracking-wide text-white md:text-2xl">
           {title}

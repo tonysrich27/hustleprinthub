@@ -75,6 +75,7 @@ export function FlyerOrderBuilder() {
         <div className="mx-auto max-w-6xl">
           <ProductHeroSection
             productName={t('order.flyersTitle')}
+            heroImage="/media/general/business-cards-showcase.jpg"
             badge="startingAt"
             badgeValue="35"
           />

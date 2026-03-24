@@ -76,7 +76,17 @@
     "sponsorBody": "Hustle Print Hub is the official print sponsor for HustleFanz. Sponsors and vendors get dedicated discount codes and priority support.",
     "ctaTitle": "READY TO PRINT?",
     "ctaSub": "Start your order now. Fast turnaround. Premium quality.",
-    "ctaDesign": "Upload your design or let us create it for you"
+    "ctaDesign": "Upload your design or let us create it for you",
+    "recentWork": "Recent Work",
+    "recentWorkSub": "Real prints and installs from the shop floor.",
+    "realInstalls": "Real Installs",
+    "realInstallsSub": "Banners, signs, and wraps in the field.",
+    "clientJobs": "Client Jobs",
+    "clientJobsSub": "Food trucks, fleets, and promo runs.",
+    "foodTrucksTitle": "Food Trucks & Trailers",
+    "foodTrucksSub": "Mobile kitchens and promo trailers we’ve wrapped.",
+    "behindTheHustle": "Behind The Hustle",
+    "behindTheHustleSub": "Short clips — pickup, consults, and the grind."
   },
   "category": {
     "gallery": "Gallery",
